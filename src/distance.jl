@@ -14,3 +14,11 @@ function distance2(H::HLine,p::Vector{Float64})
 end
 
 
+# The function distance2
+#  parameters: p,(X,Y,Z) 
+#  the squared euclidean distance from the points p and(X,Y,Z).
+#
+function distance2(p::Vector{Float64}, [X,  Y, Z]) 
+
+    return norm(p-[X,Y,Z])^2
+end
