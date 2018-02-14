@@ -44,7 +44,7 @@ function distance2(L::HLine, A::Vector{Float64}, B::Vector{Float64})
     s0 =(b*d-a*e0)/(a*c-b*b)
     t0 =(c*d-b*e0)/(a*c-b*b)
     p0=-e0/c
-     w = w0 + s*v-t*u
+     #w = w0 + s*v-t*u
      H=[A[1]+v[1]*p0, A[2]+v[2]*p0,A[3]+v[3]*p0]
      P = H-L.m_pt
 
@@ -152,9 +152,9 @@ function distance2(L::HLine, A::Vector{Float64}, B::Vector{Float64})
 
                 end
             end
-        end
+       
 
-        else if (d<0 && d1<0)
+        elseif (d<0 && d1<0)
        
             if H[1]>=min(A[1],B[1]) && H[1]<=max(A[1],B[1]) && H[2]>=min(A[2],B[2]) && H[2]<=max(A[2],B[2]) && H[3]>=min(A[3],B[3]) && H[3]<=max(A[3],B[3])
             
