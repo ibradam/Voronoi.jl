@@ -188,104 +188,97 @@ end
 # param H,A,B
 # return the euclidean distance from the half-line H to a face of [AB].
  
-#=
-function distance2 (L::HLine, A::Vector{Float64}, B::Vector{Float64}) 
+
+function distance2_face(L::HLine, A::Vector{Float64}, B::Vector{Float64}) 
+
+     O=L.m_pt
+     u=L.m_dir
+    # F1,F2,F3,F4,F,v0,w0,p0,G,P,Q,R,S,h,D;
+    # x1,y1,z1,xa,ya,za,xb,yb,zb,a1,b1,c1,a,b,xo,yo,zo,c,x,y,z,d,d1,d2,s,t,e,e1,e2,w1,v1,t0;
+    xo=O[1]
+    yo=O[2]
+    zo=O[3]
+    xa=A[1] 
+    ya=A[2]
+    za=A[3]
+    xb=B[1] 
+    yb=B[2] 
+    zb=B[3]
+     a=u[1]
+     b=u[2]
+     c=u[3]
+  
 
 
 
+    if A[1]==B[1]
 
-
-     O=(H.m_pt[0], m_pt[1],m_pt[2]);
-     u(m_dir[0],m_dir[1],m_dir[2]);
-     F1,F2,F3,F4,F,v0,w0,p0,G,P,Q,R,S,h,D;
-     x1,y1,z1,xa,ya,za,xb,yb,zb,a1,b1,c1,a,b,xo,yo,zo,c,x,y,z,d,d1,d2,s,t,e,e1,e2,w1,v1,t0;
-    xo=O[0]; yo=O[1]; zo=O[2];
-    xa=A[0]; ya=A[1]; za=A[2];
-    xb=B[0]; yb=B[1]; zb=B[2];
-    a=u[0];b=u[1];c=u[2];
-    using std::min;
-    using std::max;
-
-
-
-    if (A[0]==B[0])
-
-    {
-        x=A[0];
-        F1 = mmx::point<double>(x,min(A[1],B[1]),min(A[2],B[2]));
-        F2 = mmx::point<double>(x,min(A[1],B[1]),max(A[2],B[2]));
-        F3 = mmx::point<double>(x,max(A[1],B[1]),max(A[2],B[2]));
-        F4 = mmx::point<double>(x,max(A[1],B[1]),min(A[2],B[2]));
-        std::cout<< " "<<F1<<" "<<F2<< " "<<F3<< " "<<F4<<std::endl;
+        x=A[1]
+        F1 = [x,min(A[2],B[2]),min(A[3],B[3])]
+        F2 = [x,min(A[2],B[2]),max(A[3],B[3])] 
+        F3 = [x,max(A[2],B[2]),max(A[3],B[3])] 
+        F4 = [x,max(A[2],B[2]),min(A[3],B[3])] 
     end
 
-    if (A[1]==B[1])
+    if A[2]==B[2]
 
-    {
-
-        y=A[1];
-        F1 = mmx::point<double>(min(A[0],B[0]),y,min(A[2],B[2]));
-        F2 = mmx::point<double>(min(A[0],B[0]),y,max(A[2],B[2]));
-        F3 = mmx::point<double>(max(A[0],B[0]),y,max(A[2],B[2]));
-        F4 = mmx::point<double>(max(A[0],B[0]),y,min(A[2],B[2]));
+        y=A[2]
+        F1 =[min(A[1],B[1]),y,min(A[3],B[3])] 
+        F2 = [min(A[1],B[1]),y,max(A[3],B[3])] 
+        F3 =[max(A[1],B[1]),y,max(A[3],B[3])] 
+        F4 = [max(A[1],B[1]),y,min(A[3],B[3])]
    
     end
 
-    if (A[2]==B[2])
+    if A[3]==B[3]
 
-    {
-
-        z=A[2];
-        F1 = mmx::point<double>(min(A[0],B[0]),min(A[1],B[1]),z);
-        F2 = mmx::point<double>(min(A[0],B[0]),max(A[1],B[1]),z);
-        F3 = mmx::point<double>(max(A[0],B[0]),max(A[1],B[1]),z);
-        F4 = mmx::point<double>(max(A[0],B[0]),min(A[1],B[1]),z);
+        z=A[3]
+        F1 =[min(A[1],B[1]),min(A[2],B[2]),z] 
+        F2 = [min(A[1],B[1]),max(A[2],B[2]),z] 
+        F3 =[max(A[1],B[1]),max(A[2],B[2]),z]  
+        F4 = [max(A[1],B[1]),min(A[2],B[2]),z]
         
     end
 
-    v0=F2-F1;
-    w0=F4-F1;
-    p0=v0.cross(w0);
+    v0=F2-F1
+    w0=F4-F1
+    p0=cross(v0,w0)
     G=F1-O;
-    e1=G.dot(v0);
-    e2=G.dot(w0);
-    e=v0.dot(w0);
-    v1=v0.dot(v0);
-    w1=w0.dot(w0);
-    F=B-A;
-    R=O-A;
-    S=F1-O;
-    s=(e1*w1-e2*e)/(v1*w1-e*e);
-    t=(e2*v1-e1*e)/(v1*w1-e*e);
+    e1=dot(G,v0)
+    e2=dot(G,w0)
+    e0=dot(v0,w0)
+    v1=dot(v0,v0)
+    w1=dot(w0,w0)
+    F=B-A
+    R=O-A
+    S=F1-O
+    s=(e1*w1-e2*e0)/(v1*w1-e0*e0)
+    t=(e2*v1-e1*e0)/(v1*w1-e0*e0)
 
+    if norm(cross(u,F))==0
 
-
-    if((u.cross(F)).norm()==0)
-    {
-
-        if (s>=0 && s<=1 && t>=0 && t<=1)
-        {
-            if(p0.dot(R)!=0)
-            {
-                P=F1+s*v0+t*w0;
-                Q=P-O;
-                d=sqrt(Q.dot(Q));
-                return d;
+        if s>=0 && s<=1 && t>=0 && t<=1
+        
+            if dot(p0,R)!=0
+           
+                P=F1+s*v0+t*w0
+                Q=P-O
+                d=norm(Q)
+                return d
             end
 
             else
-            {
-                d=0;
-                return d;
+           
+                d=0
+                return d
             end
         end
         else
-        {
-            d1= min(this->distance2(F1, F2),this->distance2(F2, F3));
-            d2= min(this->distance2(F3, F4),this->distance2(F4, F1));
-            d=min(d1,d2);
-            std::cout<< " "<<d1<<" "<<d2<<std::endl;
-            return d;
+        
+            d1= min(distance2(L, F1, F2), distance2(L,F2, F3))
+            d2= min(distance2(L, F3, F4),distance2(L,F4, F1))
+            d=min(d1,d2)
+            return d
 
         end
 
@@ -294,44 +287,42 @@ function distance2 (L::HLine, A::Vector{Float64}, B::Vector{Float64})
 
     else
 
-    {
-        t0 = (p0.dot(S))/(u.dot(p0));
-        h=O+t0*u;
-        D=h-F1;
+   
+        t0 = (dot(p0,S))/(dot(u,p0))
+        h=O+t0*u
+        D=h-F1
 
 
-        if (t0<0 && s>=0 && s<=1 && t>=0 && t<=1 )
-        {
-            P=F1+s*v0+t*w0;
-            Q=P-O;
-            d=sqrt(Q.dot(Q));
-            return d;
+        if t0<0 && s>=0 && s<=1 && t>=0 && t<=1 
+       
+            P=F1+s*v0+t*w0
+            Q=P-O
+            d=norm(Q)
+            return d
 
         end
 
         else
-        {
-            d1= min(this->distance2(F1, F2),this->distance2(F2, F3));
-            d2= min(this->distance2(F3, F4),this->distance2(F4, F1));
-            d=min(d1,d2);
-            std::cout<< " "<<d1<<" "<<d2<<std::endl;
-            return d;
+      
+            d1= min(distance2(L,F1, F2),distance2(L,F2, F3))
+            d2= min(distance2(L,F3, F4),distance2(L,F4, F1))
+            d=min(d1,d2)
+            return d
         end
 
-        if(t0>=0 && p0.dot(D)!=0)
-        {
-            d1= min(this->distance2(F1, F2),this->distance2(F2, F3));
-            d2= min(this->distance2(F3, F4),this->distance2(F4, F1));
-            d=min(d1,d2);
-            std::cout<< " "<<d1<<" "<<d2<<std::endl;
-            return d;
+        if t0>=0 && dot(p0,D)!=0
+       
+            d1= min(distance2(L,F1, F2), distance2(L,F2, F3))
+            d2= min(distance2(L,F3, F4),distance2(L,F4, F1))
+            d=min(d1,d2)
+            return d
 
         end
 
-        if(t0>=0 && p0.dot(D)==0)
-        {
-            d=0;
-            return d;
+        if t0>=0 && dot(p0,D)==0
+      
+            d=0
+            return d
         end
 
 
@@ -340,7 +331,7 @@ function distance2 (L::HLine, A::Vector{Float64}, B::Vector{Float64})
 
 end
 
-=#
+
 
 
 
