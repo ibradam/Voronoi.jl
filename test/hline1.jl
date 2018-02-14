@@ -8,3 +8,4 @@ point(l1), dir(l2), point(l3)
 
 distance2(l2, [1.0,2.0,3.0])
 
+

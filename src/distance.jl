@@ -177,13 +177,6 @@ end
 
 
 
-
-
-
-
-
-
-
 # The function distance2
 # param H,A,B
 # return the euclidean distance from the half-line H to a face of [AB].
@@ -207,9 +200,7 @@ function distance2_face(L::HLine, A::Vector{Float64}, B::Vector{Float64})
      a=u[1]
      b=u[2]
      c=u[3]
-  
-
-
+ 
 
     if A[1]==B[1]
 
