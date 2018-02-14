@@ -15,8 +15,8 @@ end
 
 
 # The function distance2
-#  parameters: p,(X,Y,Z) 
-#  the squared euclidean distance from the points p and(X,Y,Z).
+#  parameters: (X,Y,Z) 
+#  the squared euclidean distance from L to a point (X,Y,Z).
 
 function distance2(L::HLine, X,  Y, Z) 
 
@@ -27,12 +27,12 @@ end
 
  # The function distance2
  # param A,B
- # return the euclidean distance from the half-line H to a segment [AB].
+ # return the euclidean distance from the half-line L to a segment [AB].
  
 function distance2(L::HLine, A::Vector{Float64}, B::Vector{Float64}) 
 
      v = B - A
-    w0= A - L.m_pt
+     w0= A - L.m_pt
      w01= B - L.m_pt
      u = L.m_dir
      a= dot(u,u)
@@ -129,7 +129,7 @@ function distance2(L::HLine, A::Vector{Float64}, B::Vector{Float64})
 
             if s0>=0 && s0<=1 && t0<0
             
-                s1=-e1//c
+                s1=-e0//c
                 t1=0
                 if s1>=0 && s1<=1
                 
@@ -161,7 +161,7 @@ function distance2(L::HLine, A::Vector{Float64}, B::Vector{Float64})
                 return  sqrt(dot(P,P))
             end
             else
-                return min(sqrt(dot(ww0,w0)), sqrt(dot(ww01,w01)))
+                return min(sqrt(dot(w0,w0)), sqrt(dot(w01,w01)))
 
 
 
