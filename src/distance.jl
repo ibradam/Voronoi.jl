@@ -56,7 +56,7 @@ function distance2(L::HLine, A::Vector{Float64}, B::Vector{Float64})
             s1=0
             t1=e0/b
             w1=w0+s1*v-t1*u
-            return sqrt(dot(w1,w1))
+            return norm(w1)
 
         else #if(d<0 && d1<0)
             
@@ -65,7 +65,7 @@ function distance2(L::HLine, A::Vector{Float64}, B::Vector{Float64})
             s=1
             w=w0+s*v-t1*u
             w1=w0+s1*v-t1*u
-            return min(sqrt(dot(w1,w1)),sqrt(dot(w,w)))
+            return min(norm(w1),norm(w))
             
         end 
 
@@ -78,7 +78,7 @@ function distance2(L::HLine, A::Vector{Float64}, B::Vector{Float64})
                 s1=s0
                 t1=t0
                 w1=w0+s1*v-t1*u
-                return sqrt(dot(w1,w1))
+                return norm(w1)
 
             end
 
@@ -90,7 +90,7 @@ function distance2(L::HLine, A::Vector{Float64}, B::Vector{Float64})
                 if t1>=0
       
                     w1=w0+s1*v-t1*u
-                    return sqrt(dot(w1,w1))
+                    return norm(w1)
 
                 
                 elseif t1<0
@@ -98,7 +98,7 @@ function distance2(L::HLine, A::Vector{Float64}, B::Vector{Float64})
                     s1=0
                     t1=0
                     w1=w0+s1*v-t1*u
-                    return sqrt(dot(w1,w1))
+                    return norm(w1)
                 end
 
             end
@@ -111,14 +111,14 @@ function distance2(L::HLine, A::Vector{Float64}, B::Vector{Float64})
                  if t1>=0
                 
                     w1=w0+s1*v-t1*u
-                    return sqrt(dot(w1,w1))
+                    return norm(w1)
 
                 elseif t1<0
                 
                     s1=1
                     t1=0
                     w1=w0+s1*v-t1*u
-                    return sqrt(dot(w1,w1))
+                    return norm(w1)
                 end
 
             end
@@ -132,21 +132,21 @@ function distance2(L::HLine, A::Vector{Float64}, B::Vector{Float64})
                 if s1>=0 && s1<=1
                 
                     w1=w0+s1*v-t1*u
-                    return sqrt(dot(w1,w1))
+                    return norm(w1)
                 
                 elseif s1<0
                 
                     s1=0
                     t1=0
                     w1=w0+s1*v-t1*u
-                    return sqrt(dot(w1,w1))
+                    return norm(w1)
                
                 elseif s1>1
                 
                     s1=1
                     t1=0
                     w1=w0+s1*v-t1*u
-                    return sqrt(dot(w1,w1))
+                    return norm(w1)
 
                 end
             end
@@ -156,9 +156,9 @@ function distance2(L::HLine, A::Vector{Float64}, B::Vector{Float64})
        
             if H[1]>=min(A[1],B[1]) && H[1]<=max(A[1],B[1]) && H[2]>=min(A[2],B[2]) && H[2]<=max(A[2],B[2]) && H[3]>=min(A[3],B[3]) && H[3]<=max(A[3],B[3])
             
-                return  sqrt(dot(P,P))
+                return  norm(P)
             else
-                return min(sqrt(dot(w0,w0)), sqrt(dot(w01,w01)))
+                return min(norm(w0), norm(w01))
 
             end
 
