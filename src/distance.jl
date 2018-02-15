@@ -80,76 +80,67 @@ function distance2(L::HLine, A::Vector{Float64}, B::Vector{Float64})
                 w1=w0+s1*v-t1*u
                 return norm(w1)
 
-            end
-
-            if s0<0 && t0>=0
+            elseif s0<0 && t0>=0
             
-                s1=0
-                t1=d/a
+                  s1=0
+                  t1=d/a
 
                 if t1>=0
-      
-                    w1=w0+s1*v-t1*u
-                    return norm(w1)
+                  w1=w0+s1*v-t1*u
+                  return norm(w1)
+                else
+                    #s1=0
+                    #t1=0
+                    #w1=w0+s1*v-t1*u
+                   return norm(w0)
+                 end
 
-                
-                elseif t1<0
-                
-                    s1=0
-                    t1=0
-                    w1=w0+s1*v-t1*u
-                    return norm(w1)
-                end
-
-            end
-
-            if s0>1 && t0>=0
+            elseif s0>1 && t0>=0
            
-                s1=1
-                t1=(b+d)/a
+                  s1=1
+                  t1=(b+d)/a
                 
-                 if t1>=0
+                if t1>=0
                 
                     w1=w0+s1*v-t1*u
                     return norm(w1)
 
-                elseif t1<0
+                else
+                    #t1<0
                 
-                    s1=1
-                    t1=0
-                    w1=w0+s1*v-t1*u
+                    #s1=1
+                    #t1=0
+                    w1=w0+s1*v
                     return norm(w1)
                 end
 
-            end
 
-
-
-            if s0>=0 && s0<=1 && t0<0
+            elseif s0>=0 && s0<=1 && t0<0
             
-                s1=-e0/c
-                t1=0
-                if s1>=0 && s1<=1
+                   s1=-e0/c
+                   t1=0
+                 if s1>=0 && s1<=1
                 
                     w1=w0+s1*v-t1*u
                     return norm(w1)
                 
-                elseif s1<0
+                 elseif s1<0  
                 
-                    s1=0
-                    t1=0
-                    w1=w0+s1*v-t1*u
-                    return norm(w1)
-               
-                elseif s1>1
+                   # s1=0
+                   # t1=0
+                   # w1=w0+s1*v-t1*u
+                    #return norm(w1)
+                     return norm(w0)
+                 elseif s1>1
                 
-                    s1=1
-                    t1=0
-                    w1=w0+s1*v-t1*u
-                    return norm(w1)
-
-                end
-            end
+                    #s1=1
+                    #t1=0
+                    #w1=w0+s1*v-t1*u
+                    #return norm(w1)
+                     w1=w0+v
+                    return norm(w1)   
+                 end
+             end
        
 
         else  #if (d<0 && d1<0)
@@ -221,16 +212,16 @@ function distance2_face(L::HLine, A::Vector{Float64}, B::Vector{Float64})
 
         z=A[3]
         F1 =[min(A[1],B[1]),min(A[2],B[2]),z] 
-        F2 = [min(A[1],B[1]),max(A[2],B[2]),z] 
+        F2 =[min(A[1],B[1]),max(A[2],B[2]),z] 
         F3 =[max(A[1],B[1]),max(A[2],B[2]),z]  
-        F4 = [max(A[1],B[1]),min(A[2],B[2]),z]
+        F4 =[max(A[1],B[1]),min(A[2],B[2]),z]
         
     end
 
     v0=F2-F1
     w0=F4-F1
     p0=cross(v0,w0)
-    G=F1-O;
+    G=F1-O
     e1=dot(G,v0)
     e2=dot(G,w0)
     e0=dot(v0,w0)
