@@ -2,14 +2,9 @@
 # The function equidist
 # \param H1,H2,A,B
 # returns the  equidistant point to H1 and H2 on the segment [A,B]
-#=
+
 function equidist(H1::HLine, H2::HLine, A::Vector{Float64}, B::Vector{Float64})
 
-
-
-{
-    #mmx::point<double> p,p1,p2,p3,p4,q1,q2,q3,q4;
-   # double a,b,t3,t2,x1,x2,y1,y2,z1,z2,xa,xb,ya,yb,za,zb,delta;
 
     x1=H1.m_pt[1]
     y1=H1.m_pt[2]
@@ -52,7 +47,7 @@ function equidist(H1::HLine, H2::HLine, A::Vector{Float64}, B::Vector{Float64})
 
             p1 = t1*A+(1-t1)*B
             if t1>=0 && t1 <= 1 && p[3]<=a && p[1] >= min(xa,xb) && p[1]<=max(xa,xb) && p[2] >= min(ya,yb) && p[2]<=max(ya,yb)
-                return p
+                return p1
             elseif delta1>=0
                 t2=t21
                 t3=t22
@@ -75,42 +70,40 @@ function equidist(H1::HLine, H2::HLine, A::Vector{Float64}, B::Vector{Float64})
             b = H1.m_pt[3]
             a = H2.m_pt[3]
 
-            #// std::cout<<" "<<p1<<" ,"<<p2<<" ,"<<p3<< ", "<<p4<<std::endl;
-
-            p1 = t1*A+(1-t1)*B;
-            if (t1>=0 && t1 <= 1 && p[3]<=a && p[1] >= min(xa,xb) && p[1]<=max(xa,xb) && p[2] >= min(ya,yb) && p[2]<=max(ya,yb))
-                return p;
-            else if (delta2>=0)
-            
-                t2=tt21;
-                p = t2*A+(1-t2)*B;
-                if (t2>=0 && t2 <= 1 && p[3]>= a && p[3]<=b && p[1] >= min(xa,xb) && p[1]<=max(xa,xb) && p[2] >= min(ya,yb) && p[2]<=max(ya,yb))
-                    return p;
-                t3=tt22;
-                p = t3*A+(1-t3)*B;
-                if (t3>=0 && t3 <= 1 && p[3]>= a && p[3]<=b && p[1] >= min(xa,xb) && p[1]<=max(xa,xb) && p[2] >= min(ya,yb) && p[2]<=max(ya,yb))
-                    return p;
-
-
-
-            else  p = t4*A+(1-t4)*B;
-                if (t4>=0 && t4 <= 1 && p[3]>= b && p[1] >= min(xa,xb) && p[1]<=max(xa,xb) && p[2] >= min(ya,yb) && p[2]<=max(ya,yb))
-                    return p;
+            p1 = t1*A+(1-t1)*B
+            if t1>=0 && t1 <= 1 && p[3]<=a && p[1] >= min(xa,xb) && p[1]<=max(xa,xb) && p[2] >= min(ya,yb) && p[2]<=max(ya,yb)
+                return p1
+            elseif delta2>=0            
+                t2=tt21
+                t3=tt22 
+                p2= t2*A+(1-t2)*B
+                p3= t3*A+(1-t3)*B                
+                if t2>=0 && t2 <= 1 && p[3]>= a && p[3]<=b && p[1] >= min(xa,xb) && p[1]<=max(xa,xb) && p[2] >= min(ya,yb) && p[2]<=max(ya,yb)
+                  return p2
+                
+                elseif t3>=0 && t3 <= 1 && p[3]>= a && p[3]<=b && p[1] >= min(xa,xb) && p[1]<=max(xa,xb) && p[2] >= min(ya,yb) && p[2]<=max(ya,yb)
+                    return p3
+                 end  
+            else  p4 = t4*A+(1-t4)*B
+                if t4>=0 && t4 <= 1 && p[3]>= b && p[1] >= min(xa,xb) && p[1]<=max(xa,xb) && p[2] >= min(ya,yb) && p[2]<=max(ya,yb)
+                return p4
+                end
             end
-            end
-       end
+        end
 
-       
+    else
+       println("--- error in equidist")
+       return     
 
     end
 
-       
+    
 end
 
 
 
 
-
+#=
 
 /*!
  * \brief equidist
