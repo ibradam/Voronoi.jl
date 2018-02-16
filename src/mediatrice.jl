@@ -1,4 +1,3 @@
-
 # The function equidist
 # \param H1,H2,A,B
 # returns the  equidistant point to H1 and H2 on the segment [A,B]
@@ -92,7 +91,7 @@ function equidist(H1::HLine, H2::HLine, A::Vector{Float64}, B::Vector{Float64})
         end
 
     else
-       println("--- error in equidist")
+       println("------ error in equidist")
        return     
 
     end
