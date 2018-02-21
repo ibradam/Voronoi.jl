@@ -2,7 +2,6 @@
 # \param H1,H2,A,B
 # returns the#=
 #equidistant point to H1 and H2 on the segment [A,B]
-
 function equidist(H1::HLine, H2::HLine, A::Vector{Float64}, B::Vector{Float64})    
     x1=H1.m_pt[1]
     y1=H1.m_pt[2]
@@ -20,6 +19,7 @@ function equidist(H1::HLine, H2::HLine, A::Vector{Float64}, B::Vector{Float64})
     t21 = (x1 * xa - x1 * xb - x2 * xa + x2 * xb + y1 * ya - y1 * yb - y2 * ya + y2 * yb + z2 * za -  z2 * zb - za * zb + zb * zb + sqrt(x1 * x1 * xa * xa - 2.0  *x1 * x1 * xa * xb + x1 * x1 * xb * xb - x1 * x1 * za * za +2.0 * x1 * x1 * za * zb - x1 * x1 * zb * zb - 2.0 * x1 * x2 * xa * xa + 4.0 * x1 * x2 * xa * xb - 2.0 * x1 * x2 * xb * xb +2.0 * x1 * xa * y1 * ya - 2.0 * x1 * xa * y1 * yb - 2.0 * x1 * xa * y2 * ya +2.0 * x1 * xa * y2 * yb +2.0 * x1 * xa * z2 * za - 2.0 * x1 * xa * z2 * zb - 2.0 * x1 * xa * za * zb +2.0 * x1 * xa * zb * zb - 2.0 * x1 * xb * y1 * ya +2.0 * x1 * xb * y1 * yb +2.0 * x1 * xb * y2 * ya - 2.0 * x1 * xb * y2 * yb - 2.0 * x1 * xb * z2 * za +2.0 * x1 * xb * z2 * zb +2.0 * x1 * xb * za * za - 2.0 * x1 * xb * za * zb + x2 * x2 * xa * xa - 2.0 * x2 * x2 * xa * xb + x2 * x2 * xb * xb + x2 * x2 * za * za - 2.0 * x2 * x2 * za * zb + x2 * x2 * zb * zb - 2.0 * x2 * xa * y1 * ya +2.0 * x2 * xa * y1 * yb +2.0 * x2 * xa * y2 * ya - 2.0 * x2 * xa * y2 * yb - 2.0 * x2 * xa * z2 * za +2.0 * x2 * xa * z2 * zb +2.0 * x2 * xa * za * zb - 2.0 * x2 * xa * zb * zb +2.0 * x2 * xb * y1 * ya - 2.0 * x2 * xb * y1 * yb - 2.0 * x2 * xb * y2 * ya +2.0 * x2 * xb * y2 * yb +2.0 * x2 * xb * z2 * za - 2.0 * x2 * xb * z2 * zb - 2.0 * x2 * xb * za * za +2.0 * x2 * xb * za * zb + y1 * y1 * ya * ya - 2.0 * y1 * y1 * ya * yb + y1 * y1 * yb * yb - y1 * y1 * za * za +2.0 * y1 * y1 * za * zb - y1 * y1 * zb * zb - 2.0 * y1 * y2 * ya * ya + 4.0 * y1 * y2 * ya * yb - 2.0 * y1 * y2 * yb * yb +2.0 * y1 * ya * z2 * za - 2.0 * y1 * ya * z2 * zb - 2.0 * y1 * ya * za * zb +2.0 * y1 * ya * zb * zb - 2.0 * y1 * yb * z2 * za +2.0 * y1 * yb * z2 * zb +2.0 * y1 * yb * za * za - 2.0 * y1 * yb * za * zb + y2 * y2 * ya * ya - 2.0 * y2 * y2 * ya * yb + y2 * y2 * yb * yb + y2 * y2 * za * za - 2.0 * y2 * y2 * za * zb + y2 * y2 * zb * zb - 2.0 * y2 * ya * z2 * za +2.0 * y2 * ya * z2 * zb +2.0 * y2 * ya * za * zb - 2.0 * y2 * ya * zb * zb +2.0 * y2 * yb * z2 * za - 2.0 * y2 * yb * z2 * zb - 2.0 * y2 * yb * za * za +2.0 * y2 * yb * za * zb))/(za*za -  2.0*za*zb + zb*zb)
     t22 = -(- x1 * xa + x1 * xb + x2 * xa - x2 * xb - y1 * ya + y1 * yb+ y2 * ya - y2 * yb - z2 * za + z2 * zb + za * zb - zb * zb + sqrt(x1 * x1 * xa * xa - 2.0 *x1 * x1 * xa * xb + x1 * x1 * xb * xb - x1 * x1 * za * za +2.0 * x1 * x1 * za * zb - x1 * x1 * zb * zb - 2.0 * x1 * x2 * xa * xa + 4.0 * x1 * x2 * xa * xb - 2.0 * x1 * x2 * xb * xb +2.0 * x1 * xa * y1 * ya - 2.0 * x1 * xa * y1 * yb - 2.0 * x1 * xa * y2 * ya +2.0 * x1 * xa * y2 * yb +2.0 * x1 * xa * z2 * za - 2.0 * x1 * xa * z2 * zb - 2.0 * x1 * xa * za * zb +2.0 * x1 * xa * zb * zb - 2.0 * x1 * xb * y1 * ya +2.0 * x1 * xb * y1 * yb +2.0 * x1 * xb * y2 * ya - 2.0 * x1 * xb * y2 * yb - 2.0 * x1 * xb * z2 * za +2.0 * x1 * xb * z2 * zb +2.0 * x1 * xb * za * za - 2.0 * x1 * xb * za * zb + x2 * x2 * xa * xa - 2.0 * x2 * x2 * xa * xb + x2 * x2 * xb * xb + x2 * x2 * za * za - 2.0 * x2 * x2 * za * zb + x2 * x2 * zb * zb - 2.0 * x2 * xa * y1 * ya +2.0 * x2 * xa * y1 * yb +2.0 * x2 * xa * y2 * ya - 2.0 * x2 * xa * y2 * yb - 2.0 * x2 * xa * z2 * za +2.0 * x2 * xa * z2 * zb +2.0 * x2 * xa * za * zb - 2.0 * x2 * xa * zb * zb +2.0 * x2 * xb * y1 * ya - 2.0 * x2 * xb * y1 * yb - 2.0 * x2 * xb * y2 * ya +2.0 * x2 * xb * y2 * yb +2.0 * x2 * xb * z2 * za - 2.0 * x2 * xb * z2 * zb - 2.0 * x2 * xb * za * za +2.0 * x2 * xb * za * zb + y1 * y1 * ya * ya - 2.0 * y1 * y1 * ya * yb + y1 * y1 * yb * yb - y1 * y1 * za * za +2.0 * y1 * y1 * za * zb - y1 * y1 * zb * zb - 2.0 * y1 * y2 * ya * ya + 4.0 * y1 * y2 * ya * yb - 2.0 * y1 * y2 * yb * yb +2.0 * y1 * ya * z2 * za - 2.0 * y1 * ya * z2 * zb - 2.0 * y1 * ya * za * zb +2.0 * y1 * ya * zb * zb - 2.0 * y1 * yb * z2 * za +2.0 * y1 * yb * z2 * zb +2.0 * y1 * yb * za * za - 2.0 * y1 * yb * za * zb + y2 * y2 * ya * ya - 2.0 * y2 * y2 * ya * yb + y2 * y2 * yb * yb + y2 * y2 * za * za - 2.0 * y2 * y2 * za * zb + y2 * y2 * zb * zb - 2.0 * y2 * ya * z2 * za +2.0 * y2 * ya * z2 * zb +2.0 * y2 * ya * za * zb - 2.0 * y2 * ya * zb * zb +2.0 * y2 * yb * z2 * za - 2.0 * y2 * yb * z2 * zb - 2.0 * y2 * yb * za * za +2.0 * y2 * yb * za * zb))/(za*za - 2.0*za*zb + zb*zb)
     tt21 = (-x1 * xa + x1 * xb + x2 * xa - x2 * xb - y1 * ya + y1 * yb + y2 * ya - y2 * yb + z1 * za - z1 * zb - za * zb + zb * zb + sqrt(x1 * x1 * xa * xa - 2.0 *x1 * x1 * xa * xb + x1 * x1 * xb * xb + x1 * x1 * za * za - 2.0 * x1 * x1 * za * zb + x1 * x1 * zb * zb - 2.0 * x1 * x2 * xa * xa + 4.0 * x1 * x2 * xa * xb - 2.0 * x1 * x2 * xb * xb +2.0 * x1 * xa * y1 * ya - 2.0 * x1 * xa * y1 * yb - 2.0 * x1 * xa * y2 * ya +2.0 * x1 * xa * y2 * yb - 2.0 * x1 * xa * z1 * za +2.0 * x1 * xa * z1 * zb +2.0 * x1 * xa * za * zb - 2.0 * x1 * xa * zb * zb - 2.0 * x1 * xb * y1 * ya +2.0 * x1 * xb * y1 * yb +2.0 * x1 * xb * y2 * ya - 2.0 * x1 * xb * y2 * yb +2.0 * x1 * xb * z1 * za - 2.0 * x1 * xb * z1 * zb - 2.0 * x1 * xb * za * za +2.0 * x1 * xb * za * zb + x2 * x2 * xa * xa - 2.0 * x2 * x2 * xa * xb + x2 * x2 * xb * xb - x2 * x2 * za * za +2.0 * x2 * x2 * za * zb - x2 * x2 * zb * zb - 2.0 * x2 * xa * y1 * ya +2.0 * x2 * xa * y1 * yb +2.0 * x2 * xa * y2 * ya - 2.0 * x2 * xa * y2 * yb +2.0 * x2 * xa * z1 * za - 2.0 * x2 * xa * z1 * zb - 2.0 * x2 * xa * za * zb +2.0 * x2 * xa * zb * zb +2.0 * x2 * xb * y1 * ya - 2.0 * x2 * xb * y1 * yb - 2.0 * x2 * xb * y2 * ya +2.0 * x2 * xb * y2 * yb - 2.0 * x2 * xb * z1 * za +2.0 * x2 * xb * z1 * zb +2.0 * x2 * xb * za * za - 2.0 * x2 * xb * za * zb + y1 * y1 * ya * ya - 2.0 * y1 * y1 * ya * yb + y1 * y1 * yb * yb + y1 * y1 * za * za - 2.0 * y1 * y1 * za * zb + y1 * y1 * zb * zb - 2.0 * y1 * y2 * ya * ya + 4.0 * y1 * y2 * ya * yb - 2.0 * y1 * y2 * yb * yb - 2.0 * y1 * ya * z1 * za +2.0 * y1 * ya * z1 * zb +2.0 * y1 * ya * za * zb - 2.0 * y1 * ya * zb * zb +2.0 * y1 * yb * z1 * za - 2.0 * y1 * yb * z1 * zb - 2.0 * y1 * yb * za * za +2.0 * y1 * yb * za * zb + y2 * y2 * ya * ya - 2.0 * y2 * y2 * ya * yb + y2 * y2 * yb * yb - y2 * y2 * za * za +2.0 * y2 * y2 * za * zb - y2 * y2 * zb * zb +2.0 * y2 * ya * z1 * za - 2.0 * y2 * ya * z1 * zb - 2.0 * y2 * ya * za * zb +2.0 * y2 * ya * zb * zb - 2.0 * y2 * yb * z1 * za +2.0 * y2 * yb * z1 * zb +2.0 * y2 * yb * za * za - 2.0 * y2 * yb * za * zb))/(za*za - 2.0*za*zb + zb*zb)
+
 tt22 = -(x1 * xa - x1 * xb - x2 * xa + x2 * xb + y1 * ya - y1 * yb - y2 * ya + y2 * yb - z1 * za + z1 * zb + za * zb - zb * zb + sqrt(x1 * x1 * xa * xa - 2.0 *x1 * x1 * xa * xb + x1 * x1 * xb * xb + x1 * x1 * za * za - 2.0 * x1 * x1 * za * zb + x1 * x1 * zb * zb - 2.0 * x1 * x2 * xa * xa + 4.0 * x1 * x2 * xa * xb - 2.0 * x1 * x2 * xb * xb +2.0 * x1 * xa * y1 * ya - 2.0 * x1 * xa * y1 * yb - 2.0 * x1 * xa * y2 * ya +2.0 * x1 * xa * y2 * yb - 2.0 * x1 * xa * z1 * za +2.0 * x1 * xa * z1 * zb +2.0 * x1 * xa * za * zb - 2.0 * x1 * xa * zb * zb - 2.0 * x1 * xb * y1 * ya +2.0 * x1 * xb * y1 * yb +2.0 * x1 * xb * y2 * ya - 2.0 * x1 * xb * y2 * yb +2.0 * x1 * xb * z1 * za - 2.0 * x1 * xb * z1 * zb - 2.0 * x1 * xb * za * za +2.0 * x1 * xb * za * zb + x2 * x2 * xa * xa - 2.0 * x2 * x2 * xa * xb + x2 * x2 * xb * xb - x2 * x2 * za * za +2.0 * x2 * x2 * za * zb - x2 * x2 * zb * zb - 2.0 * x2 * xa * y1 * ya +2.0 * x2 * xa * y1 * yb +2.0 * x2 * xa * y2 * ya - 2.0 * x2 * xa * y2 * yb +2.0 * x2 * xa * z1 * za - 2.0 * x2 * xa * z1 * zb - 2.0 * x2 * xa * za * zb +2.0 * x2 * xa * zb * zb +2.0 * x2 * xb * y1 * ya - 2.0 * x2 * xb * y1 * yb - 2.0 * x2 * xb * y2 * ya +2.0 * x2 * xb * y2 * yb - 2.0 * x2 * xb * z1 * za +2.0 * x2 * xb * z1 * zb +2.0 * x2 * xb * za * za - 2.0 * x2 * xb * za * zb + y1 * y1 * ya * ya - 2.0 * y1 * y1 * ya * yb + y1 * y1 * yb * yb + y1 * y1 * za * za - 2.0 * y1 * y1 * za * zb + y1 * y1 * zb * zb - 2.0 * y1 * y2 * ya * ya + 4.0 * y1 * y2 * ya * yb - 2.0 * y1 * y2 * yb * yb - 2.0 * y1 * ya * z1 * za +2.0 * y1 * ya * z1 * zb +2.0 * y1 * ya * za * zb - 2.0 * y1 * ya * zb * zb +2.0 * y1 * yb * z1 * za - 2.0 * y1 * yb * z1 * zb - 2.0 * y1 * yb * za * za +2.0 * y1 * yb * za * zb + y2 * y2 * ya * ya - 2.0 * y2 * y2 * ya * yb + y2 * y2 * yb * yb - y2 * y2 * za * za +2.0 * y2 * y2 * za * zb - y2 * y2 * zb * zb +2.0 * y2 * ya * z1 * za - 2.0 * y2 * ya * z1 * zb - 2.0 * y2 * ya * za * zb +2.0 * y2 * ya * zb * zb - 2.0 * y2 * yb * z1 * za +2.0 * y2 * yb * z1 * zb +2.0 * y2 * yb * za * za - 2.0 * y2 * yb * za * zb))/(za*za - 2.0*za*zb + zb*zb)
 
 t4 = 0.5*((x1*x1-2*x1*xb - x2*x2 +2.0*x2*xb + y1*y1 - 2.0 *y1*yb - y2*y2 +2.0*y2*yb)/(x1*xa - x1*xb - x2*xa + x2*xb + y1*ya - y1*yb - y2*ya + y2*yb))
@@ -236,14 +236,11 @@ function equidist(H1::HLine, H2::HLine,  H3::HLine, A::Vector{Float64}, B::Vecto
         end
     end
 end
-
-
 # The function equidist
 # \param H1,H2,, H3, H4
 # returns the  equidistant point to H1 and H2 on the segment [A,B]
 # info: output variable 
 # return the point equidistant point from the four hlines H1, H2,H3 and H4.
-
 function equidist(H1::HLine, H2::HLine,  H3::HLine, H4::HLine)
     if H1.m_pt[3]<H2.m_pt[3] && H2.m_pt[3]<H3.m_pt[3] && H3.m_pt[3]<H4.m_pt[3]
         L1 = H1
@@ -365,7 +362,7 @@ function equidist(H1::HLine, H2::HLine,  H3::HLine, H4::HLine)
         L2 = H3
         L3 = H2
         L4 = H1
-    end
+    end 
     x1=L1.m_pt[1]
     y1=L1.m_pt[2]
     z1=L1.m_pt[3]
@@ -383,10 +380,8 @@ function equidist(H1::HLine, H2::HLine,  H3::HLine, H4::HLine)
     c1  =(x1 * z2 - x1 * z3 - x2 * z1 + x2 * z3 + x3 * z1 - x3 * z2) / (x1 * y2 - x1 * y3 - x2 * y1 + x2 * y3 + x3 * y1 - x3 * y2)
     d1=(-0.5) * (x1 * x1 * x2 - x1 * x1 * x3 - x1 * x2 * x2 + x1 * x3 * x3 - x1 * y2 * y2 + x1 * y3 * y3 - x1 * z2 * z2 + x1 * z3 * z3 + x2 * x2 * x3 - x2 * x3 * x3 + x2 * y1 * y1 - x2 * y3 * y3 + x2 * z1 * z1 - x2 * z3 * z3 - x3 * y1 * y1 + x3 * y2 * y2 - x3 * z1 * z1 + x3 * z2 * z2) / (x1 * y2 - x1 * y3 - x2 * y1 + x2 * y3 + x3 * y1 - x3 * y2)
     a2=-0.5* (y2 - y3) / (x1 * y2 - x1 * y3 - x2 * y1 + x2 * y3 + x3 * y1 - x3 * y2)
-    b2=(y1 * z2 - y1 * z3 + y2 * z3 - y3 * z2) / (x1 * y2 - x1 * y3 - x2 * y1 + x2 * y3 + x3 * y1 - x3 * y2)
+    b2=(y1 * z2 - y1 * z3 + y2 * z3 - y3 * z2) / (x1 * y2 - x1 * y3 - x2 * y1 + x2 * y3 + x3 * y1 - x3 * y2)     
     c2=    (0.5) * (x1 * x1 * y2 - x1 * x1 * y3 - x2 * x2 * y1 + x2 * x2 * y3 + x3 * x3 * y1 - x3 * x3 * y2 + y1 * y1 * y2 - y1 * y1 * y3 - y1 * y2 * y2 + y1 * y3 * y3 - y1 * z2 * z2 + y1 * z3 * z3 + y2 * y2 * y3 - y2 * y3 * y3 - y2 * z3 * z3 + y3 * z2 * z2) / (x1 * y2 - x1 * y3 - x2 * y1 + x2 * y3 + x3 * y1 - x3 * y2)
-
-#=
 d2 = (0.5) * (x2 - x3)/(x1 * y2 - x1 * y3 - x2 * y1 + x2 * y3 + x3 * y1 - x3 * y2)
 e2=-(x1 * z2 - x1 * z3 + x2 * z3 - x3 * z2) / (x1 * y2 - x1 * y3 - x2 * y1 + x2 * y3 + x3 * y1 - x3 * y2)
 
@@ -421,55 +416,6 @@ C3 = -2.0 * a4 * x2 +2.0*a4*x4 - 2.0*b4 * y2 +2.0*b4*y4 + x2*x2 - x4*x4 + y2*y2 
 D3= B3*B3-4.0*A3*C3
 t0= -(0.5)*((2.0* b1 * x2 - 2.0 * b1 * x4 +2.0 * d1 * y2 - 2.0 * d1 * y4 - x2 * x2 + x4 * x4 - y2 * y2 + y4 * y4 - z2 * z2 + z4 * z4) / (a1 * x2 - a1 * x4 + c1 * y2 - c1 * y4 + z2 - z4))
 q0=[a1*t0+b1, c1*t0+d1, t0]
-
-=#
-    if t0<= z1
-    return q0
-elseif D1>=0
-    t11=(0.5)*(-B1 - sqrt(D1))/A1
-    t12= (0.5)*(-B1 + sqrt(D1))/A1
-    q1=[a2*t11*t11+b2*t11+c2, d2*t11*t11+e2*t11+f2, t11]
-    q2=[a2*t12*t12+b2*t12+c2, d2*t12*t12+e2*t12+f2, t12]
-    if z1<=t11 && t11<=z2
-        return q1
-    elseif z1<=t12 && t12<=z2
-        return q2
-    end
-    
-elseif D2>=0
-    t21=(0.5)*(-B2 - sqrt(D2))/A2
-    t22=(0.5)*(-B2 + sqrt(D2))/A2
-    q3=[a3*t21*t21+b3*t21+c3, d3*t21*t21+e3*t21+f3, t21]
-    q4=[a3*t22*t22+b3*t22+c3, d3*t22*t22+e3*t22+f3, t22]
-    if z2<=t21 && t21<=z3
-        return q3
-    elseif z2<=t22 && t22<=z3
-        return q4
-    end
-    
-elseif D3>=0
-    t31= (0.5)*(-B3 - sqrt(D3))/A3
-    t32= (0.5)*(- B3 + sqrt(D3))/A3
-    q5=[a4, b4, t31]
-    q6=[a4, b4, t32]
-    if z3<=t31 && t31<=z4
-        return q5
-    elseif z3<=t32 && t32<=z4
-        return q6
-    end
-    
-else    
-    println(" Il n' ya pas de point quadrisecteur pour H1 ,  H2  H3 et  H4")
-    return [0, 0, 0]
-end
-
-
-end
-
-
-
-
-#=
   if t0<= z1
     return q0
 elseif D1>=0
@@ -510,8 +456,8 @@ else
     return [0, 0, 0]
 end
 
+end
 
-=#
 
 
 
