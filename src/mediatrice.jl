@@ -176,7 +176,7 @@ function equidist(H1::HLine, H2::HLine,  H3::HLine, A::Vector{Float64}, B::Vecto
                 return q4
             end
         elseif a4==xa && z3<=max(za,zb) && min(ya,yb)<=b4 && b4<=max(ya,yb)
-            println(" L'intersection de la trissectrice de  H1,  H2  et   H3 avec la face [ A B] est le segment [max(z3,min(za,zb))  max(za,zb)] ")
+            println(" L'intersection de la trissectrice de  H1,  H2  et   H3 avec la face [ A B] est le segment" [max(z3,min(za,zb))  max(za,zb)])
             return [0,0,0]
         end
         println("La trissectrice de  H1,  H2 et  H3 ne coupe pas la face [ A B ]")
@@ -209,7 +209,7 @@ function equidist(H1::HLine, H2::HLine,  H3::HLine, A::Vector{Float64}, B::Vecto
                 return q4
             end
         elseif b4==ya && z3<=max(za,zb) && min(xa,xb)<=a4 && a4<=max(xa,xb)
-            println(" L'intersection de la trissectrice de  H1,  H2  et   H3 avec la face [ A B] est le segment [max(z3,min(za,zb))  max(za,zb)] ")
+            println(" L'intersection de la trissectrice de  H1,  H2  et   H3 avec la face [ A B] est le segment" [max(z3,min(za,zb))  max(za,zb)] )
             return [0,0,0]
         else
             println("La trissectrice de  H1,  H2 et  H3 ne coupe pas la face [ A B ]")
@@ -236,6 +236,7 @@ function equidist(H1::HLine, H2::HLine,  H3::HLine, A::Vector{Float64}, B::Vecto
         end
     end
 end
+
 # The function equidist
 # \param H1,H2,, H3, H4
 # returns the  equidistant point to H1 and H2 on the segment [A,B]
@@ -384,23 +385,14 @@ function equidist(H1::HLine, H2::HLine,  H3::HLine, H4::HLine)
     c2=(0.5) * (x1 * x1 * y2 - x1 * x1 * y3 - x2 * x2 * y1 + x2 * x2 * y3 + x3 * x3 * y1 - x3 * x3 * y2 + y1 * y1 * y2 - y1 * y1 * y3 - y1 * y2 * y2 + y1 * y3 * y3 - y1 * z2 * z2 + y1 * z3 * z3 + y2 * y2 * y3 - y2 * y3 * y3 - y2 * z3 * z3 + y3 * z2 * z2) / (x1 * y2 - x1 * y3 - x2 * y1 + x2 * y3 + x3 * y1 - x3 * y2)
     d2= (0.5) * (x2 - x3)/(x1 * y2 - x1 * y3 - x2 * y1 + x2 * y3 + x3 * y1 - x3 * y2)
     e2=-(x1 * z2 - x1 * z3 + x2 * z3 - x3 * z2) / (x1 * y2 - x1 * y3 - x2 * y1 + x2 * y3 + x3 * y1 - x3 * y2)
-
     f2=(-0.5) * (x1 * x1 * x2 - x1 * x1 * x3 - x1 * x2 * x2 + x1 * x3 * x3 - x1 * y2 * y2 + x1 * y3 * y3 - x1 * z2 * z2 + x1 * z3 * z3 + x2 * x2 * x3 - x2 * x3 * x3 + x2 * y1 * y1 - x2 * y3 * y3 - x2 * z3 * z3 - x3 * y1 * y1 + x3 * y2 * y2 + x3 * z2 * z2) / (x1 * y2 - x1 * y3 - x2 * y1 + x2 * y3 + x3 * y1 - x3 * y2)
-
     a3=(0.5) * (y1 - y2) / (x1 * y2 - x1 * y3 - x2 * y1 + x2 * y3 + x3 * y1 - x3 * y2)
-
     b3=-z3 * (y1 - y2) / (x1 * y2 - x1 * y3 - x2 * y1 + x2 * y3 + x3 * y1 - x3 * y2)
-
     c3=(0.5) * (x1 * x1 * y2 - x1 * x1 * y3 - x2 * x2 * y1 + x2 * x2 * y3 + x3 * x3 * y1 - x3 * x3 * y2 + y1 * y1 * y2 - y1 * y1 * y3 - y1 * y2 * y2 + y1 * y3 * y3 + y1 * z3 * z3 + y2 * y2 * y3 - y2 * y3 * y3 - y2 * z3 * z3) / (x1 * y2 - x1 * y3 - x2 * y1 + x2 * y3 + x3 * y1 - x3 * y2)
-
     d3=(-0.5) * (x1 - x2) / (x1 * y2 - x1 * y3 - x2 * y1 + x2 * y3 + x3 * y1 - x3 * y2)
-
     e3=z3 * (x1 - x2) / (x1 * y2 - x1 * y3 - x2 * y1 + x2 * y3 + x3 * y1 - x3 * y2)
-
     f3=(-0.5) * (x1 * x1 * x2 - x1 * x1 * x3 - x1 * x2 * x2 + x1 * x3 * x3 - x1 * y2 * y2 + x1 * y3 * y3 + x1 * z3 * z3 + x2 * x2 * x3 - x2 * x3 * x3 + x2 * y1 * y1 - x2 * y3 * y3 - x2 * z3 * z3 - x3 * y1 * y1 + x3 * y2 * y2) / (x1 * y2 - x1 * y3 - x2 * y1 + x2 * y3 + x3 * y1 - x3 * y2)
-
     a4=(0.5)* (x1 * x1 * y2 - x1 * x1 * y3 - x2 * x2 * y1 + x2 * x2 * y3 + x3 * x3 * y1 - x3 * x3 * y2 + y1 * y1 * y2 - y1 * y1 * y3 - y1 * y2 * y2 + y1 * y3 * y3 + y2 * y2 * y3 - y2 * y3 * y3) / (x1 * y2 - x1 * y3 - x2 * y1 + x2 * y3 + x3 * y1 - x3 * y2)
-
     b4=(-0.5)* (x1 * x1 * x2 - x1 * x1 * x3 - x1 * x2 * x2 + x1 * x3 * x3 - x1 * y2 * y2 + x1 * y3 * y3 + x2 * x2 * x3 - x2 * x3 * x3 + x2 * y1 * y1 - x2 * y3 * y3 - x3 * y1 * y1 + x3 * y2 * y2) / (x1 * y2 - x1 * y3 - x2 * y1 + x2 * y3 + x3 * y1 - x3 * y2)
     A1= -2.0 * a2 * x2 +2.0 * a2 * x4 - 2.0 * d2 * y2 + 2.0 * d2 * y4
     B1=-2.0 * b2 * x2 +2.0 * b2 * x4 - 2.0 * e2 * y2 +2.0 * e2 * y4 - 2.0 * z2 +2.0 * z4
@@ -416,46 +408,44 @@ function equidist(H1::HLine, H2::HLine,  H3::HLine, H4::HLine)
     D3= B3*B3-4.0*A3*C3 
     t0= -(0.5)*((2.0* b1 * x2 - 2.0 * b1 * x4 +2.0 * d1 * y2 - 2.0 * d1 * y4 - x2 * x2 + x4 * x4 - y2 * y2 + y4 * y4 - z2 * z2 + z4 * z4) / (a1 * x2 - a1 * x4 + c1 * y2 - c1 * y4 + z2 - z4))
     q0=[a1*t0+b1, c1*t0+d1, t0]
- 
     if t0<= z1
       return q0
     elseif D1>=0
-      t11=(0.5)*(-B1 - sqrt(D1))/A1
-      t12= (0.5)*(-B1 + sqrt(D1))/A1
+       t11=(0.5)*(-B1 - sqrt(D1))/A1
+       t12= (0.5)*(-B1 + sqrt(D1))/A1
        q1=[a2*t11*t11+b2*t11+c2, d2*t11*t11+e2*t11+f2, t11]
        q2=[a2*t12*t12+b2*t12+c2, d2*t12*t12+e2*t12+f2, t12]
        if z1<=t11 && t11<=z2
           return q1
        elseif z1<=t12 && t12<=z2
           return q2
+       end   
+    elseif D2>=0
+       t21=(0.5)*(-B2 - sqrt(D2))/A2
+       t22=(0.5)*(-B2 + sqrt(D2))/A2
+       q3=[a3*t21*t21+b3*t21+c3, d3*t21*t21+e3*t21+f3, t21]
+       q4=[a3*t22*t22+b3*t22+c3, d3*t22*t22+e3*t22+f3, t22]
+       if z2<=t21 && t21<=z3
+          return q3
+       elseif z2<=t22 && t22<=z3
+          return q4
        end
     
-   elseif D2>=0
-     t21=(0.5)*(-B2 - sqrt(D2))/A2
-     t22=(0.5)*(-B2 + sqrt(D2))/A2
-     q3=[a3*t21*t21+b3*t21+c3, d3*t21*t21+e3*t21+f3, t21]
-     q4=[a3*t22*t22+b3*t22+c3, d3*t22*t22+e3*t22+f3, t22]
-     if z2<=t21 && t21<=z3
-        return q3
-    elseif z2<=t22 && t22<=z3
-        return q4
-    end
-    
    elseif D3>=0
-     t31= (0.5)*(-B3 - sqrt(D3))/A3
-     t32= (0.5)*(- B3 + sqrt(D3))/A3
-     q5=[a4, b4, t31]
-     q6=[a4, b4, t32]
-     if z3<=t31 && t31<=z4
-        return q5
-     elseif z3<=t32 && t32<=z4
-        return q6
-     end
+      t31= (0.5)*(-B3 - sqrt(D3))/A3
+      t32= (0.5)*(- B3 + sqrt(D3))/A3
+      q5=[a4, b4, t31]
+      q6=[a4, b4, t32]
+      if z3<=t31 && t31<=z4
+         return q5
+      elseif z3<=t32 && t32<=z4
+         return q6
+      end
     
-  else    
-    println(" Il n' ya pas de point quadrisecteur pour H1 ,  H2  H3 et  H4")
-   return [0, 0, 0]
-  end
+   else    
+     println(" Il n' ya pas de point quadrisecteur pour H1 ,  H2  H3 et  H4")
+     return [0, 0, 0]
+   end
 
 end
 
