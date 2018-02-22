@@ -26,3 +26,12 @@ split_cell(m, 2, 2)
 split_cell(m, 1, 2)
 split_cell(m, 3, 3)
 split_cell(m, 5, 1)
+
+l1 = hline([0.25,0.25,0.0])
+l2 = hline([0.75,0.75,0.0])
+L = [l1,l2]
+
+closest(L, [0.25,0.25,0.1])
+mv = HLTMesh([l1,l2],m)
+
+regularity(mv,2)

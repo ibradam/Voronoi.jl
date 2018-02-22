@@ -43,3 +43,10 @@ function Axel.axlprint(io::IO, m::TMesh, idt::Int64=0 )
     axlprint(io, "</mesh>\n", idt)
 
 end
+
+function Axel.axlprint(io::IO, m::HLTMesh, idt::Int64=0 )
+    Axel.axlprint(io,m.mesh,idt)
+    for l in m.sites
+        Axel.axlprint(io,l,idt)
+    end
+end

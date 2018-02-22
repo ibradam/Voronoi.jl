@@ -110,7 +110,6 @@ function tmesh(P::Vector{Vector{Float64}})
 
     push!(m.cells, Cell([i for i in 1:8]))
 
-
     for v in 1:3
         for k in 1:cell_face_size
             insert_edge!(m, cell_face[v][1][k], cell_face[v][2][k], v);
@@ -129,7 +128,7 @@ function nbc(m::TMesh)
 end
 
 function push_vertex!(m::TMesh, p::Vector{Float64})
-    m.points =  hcat(m.points, p)
+    m.points = hcat(m.points, p)
     push!(m.vertices,Vertex())
     return length(m.vertices)
 end
@@ -149,6 +148,32 @@ end
 
 function cell(m::TMesh, i::Int64)
     return m.cells[i]
+end
+
+function size(m::TMesh, C::Cell)
+    p1 = point(m,C[1])
+    p2 = point(m,C[8])
+    norm(p2-p1,Inf)
+end
+
+function split_direction(m::TMesh, c::Int64)
+    C  = cell(m,c)
+    p1 = point(m,C[1])
+    p2 = point(m,C[8])
+    d0 = -Inf
+    v  = 0
+    for i in 1:3
+        d = abs(p1[i]-p2[i])
+        if d > d0
+            d0 = d
+            v  = i
+        end
+    end
+    return v
+end
+
+function size(m::TMesh, c::Int64)
+    return size(m, cell(m,c))
 end
 
 function find_vertex(m::TMesh, p::Vector, i0::Int64, i1::Int64, v)
@@ -171,6 +196,7 @@ function insert_middle!(m::TMesh, i0::Int64, i1::Int64)
     p = (p0 + p1)/2.0
 
     n = find_vertex(m, p, i0, i1, v)
+    
     if n==0 
         n = push_vertex!(m, p)
     end
@@ -179,7 +205,7 @@ function insert_middle!(m::TMesh, i0::Int64, i1::Int64)
     m.vertices[n][2*v-1]  = i0
     m.vertices[n][2*v]    = i1
     m.vertices[i1][2*v-1] = n
-
+    
 end
 
 function insert_edge!(m, i0::Int64, i1::Int64, v::Int64)
@@ -193,7 +219,7 @@ function insert_edge!(m, i0::Int64, i1::Int64)
     m.vertices[i1][2*v-1]= i0
 end
 
-function split_cell(m::TMesh, i::Int64, v::Int64)
+function split_cell!(m::TMesh, i::Int64, v::Int64)
 
     p = Int64[]
     C = cell(m,i)
@@ -218,33 +244,3 @@ function split_cell(m::TMesh, i::Int64, v::Int64)
     return nc
 end
 
-#=
-function neighbor(m::TMesh, idx::Int64, x0::Int64, x1::Int64, w::Int64) 
-    if idx == 0
-        return 0
-    end
-    d0 = div(w,2);
-
-    int n = (d0==0?this->vertex(idx).next(x0):this->vertex(idx).previous(x0))
-
-    if n != 0
-        d1 = div((w+1)%4,2);
-        n1 = (d1==0?this->vertex(n).next(x1):this->vertex(n).previous(x1));
-    end
-    if n1 != 0
-        w++
-        w%=4
-        tmp = x0
-        x0 = x1
-        x1 = tmp
-    end
-    
-    return n
-end
-
-function neighbor(m::TMesh, idx::Int64,  w::Int64) 
-    x0 = w%2
-    x1 = (w+1)%2;
-    return neighbor(idx, x0,x1, w);
-end
-=#
