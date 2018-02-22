@@ -70,6 +70,8 @@ function regularity(m::HLTMesh, c::Int64)
         return OUTSIDE
     elseif na == 2
         return BOUNDARY
+    elseif na >2
+        return SINGULAR
     end
 
     return OUTSIDE

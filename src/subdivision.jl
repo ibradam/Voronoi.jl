@@ -1,6 +1,7 @@
 const OUTSIDE = 0
 const INSIDE = 1
 const BOUNDARY = 2
+const SINGULAR = 3
 
 function subdivision(m, maxi::Float64 = 0.2 , mini::Float64 = maxi/10)
 
