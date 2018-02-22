@@ -13,25 +13,29 @@ function subdivision(m, maxi::Float64 = 0.2 , mini::Float64 = maxi/10)
     R =  Int64[]
     S =  Int64[]
 
-    while !isempty(L) && length(L)<10
-        #println("---- ", L)
+    while !isempty(L) 
+        # println("---- L ", L)
         c = pop!(L)
         r = regularity(m,c)
+        # println("----- r ", r)
+
         if r != OUTSIDE
 
-            if  r != INSIDE && size(m,c) > maxsz 
+            if size(m,c) > maxsz 
 
+                # println("   --- split")
                 v  = split_direction(m.mesh,c)
                 nc = split_cell!(m,c,v)
                 push!(L, c)
                 push!(L, nc)
                 
-            elseif r == BOUNDARY || r == INSIDE
+            elseif r == BOUNDARY 
             
                 push!(R,c)
             
             elseif size(m,c) > minsz
 
+                println("   === SINGULAR")
                 v  = split_direction(m.mesh,c)
                 nc = split_cell!(m, c, v)
                 push!(L, c)

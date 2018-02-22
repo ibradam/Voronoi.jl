@@ -20,4 +20,4 @@ closest(L, [0.25,0.25,0.1])
 
 m = HLTMesh([l1,l2],tmesh(P))
 
-R,S = subdivision(m,0.1)
+R,S = subdivision(m,0.05)
