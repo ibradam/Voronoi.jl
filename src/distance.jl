@@ -163,23 +163,7 @@ end
 
 function distance2_face(L::HLine, A::Vector{Float64}, B::Vector{Float64}) 
     
-    O=L.m_pt
-    u=L.m_dir
-    # F1,F2,F3,F4,F,v0,w0,p0,G,P,Q,R,S,h,D;
-    # x1,y1,z1,xa,ya,za,xb,yb,zb,a1,b1,c1,a,b,xo,yo,zo,c,x,y,z,d,d1,d2,s,t,e,e1,e2,w1,v1,t0;
-    xo=O[1]
-    yo=O[2]
-    zo=O[3]
-    xa=A[1] 
-    ya=A[2]
-    za=A[3]
-    xb=B[1] 
-    yb=B[2] 
-    zb=B[3]
-    a=u[1]
-    b=u[2]
-    c=u[3]
-    
+   
     
     if A[1]==B[1]
         
@@ -211,7 +195,20 @@ function distance2_face(L::HLine, A::Vector{Float64}, B::Vector{Float64})
         println("--- error in distance2_face")
         return
     end
-    
+     O=L.m_pt
+     u=L.m_dir
+    xo=O[1]
+    yo=O[2]
+    zo=O[3]
+    xa=A[1] 
+    ya=A[2]
+    za=A[3]
+    xb=B[1] 
+    yb=B[2] 
+    zb=B[3]
+     a=u[1]
+     b=u[2]
+     c=u[3]
     v0=F2-F1
     w0=F4-F1
     p0=cross(v0,w0)
@@ -221,13 +218,15 @@ function distance2_face(L::HLine, A::Vector{Float64}, B::Vector{Float64})
     e0=dot(v0,w0)
     v1=dot(v0,v0)
     w1=dot(w0,w0)
-    F=B-A
-    R=O-A
-    S=F1-O
-    s=(e1*w1-e2*e0)/(v1*w1-e0*e0)
-    t=(e2*v1-e1*e0)/(v1*w1-e0*e0)
-    
-    if norm(cross(u,F))==0
+     F=B-A
+     R=O-A
+     S=F1-O
+     s=(e1*w1-e2*e0)/(v1*w1-e0*e0)
+     t=(e2*v1-e1*e0)/(v1*w1-e0*e0)
+     d1= min(distance2(L, F1, F2), distance2(L,F2, F3))
+     d2= min(distance2(L, F3, F4),distance2(L,F4, F1))
+      d0=min(d1,d2)
+     if norm(cross(u,F))==0
         
         if s>=0 && s<=1 && t>=0 && t<=1
             
@@ -244,10 +243,7 @@ function distance2_face(L::HLine, A::Vector{Float64}, B::Vector{Float64})
             
         else
             
-            d1= min(distance2(L, F1, F2), distance2(L,F2, F3))
-            d2= min(distance2(L, F3, F4),distance2(L,F4, F1))
-            d=min(d1,d2)
-            return d
+            return d0
             
         end
         
@@ -264,15 +260,11 @@ function distance2_face(L::HLine, A::Vector{Float64}, B::Vector{Float64})
             d=norm(Q)
             return d
         else
-            d1= min(distance2(L,F1, F2),distance2(L,F2, F3))
-            d2= min(distance2(L,F3, F4),distance2(L,F4, F1))
-            d=min(d1,d2)
-            return d        
+            return d0 
+       
         elseif t0>=0 && dot(p0,D)!=0
-            d1= min(distance2(L,F1, F2), distance2(L,F2, F3))
-            d2= min(distance2(L,F3, F4),distance2(L,F4, F1))
-            d=min(d1,d2)
-            return d
+          
+            return d0
         elseif t0>=0 && dot(p0,D)==0            
             d=0
             return d
