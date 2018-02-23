@@ -159,14 +159,40 @@ end
 # The function distance2
 # param H,A,B
 # return the euclidean distance from the half-line H to a face of [AB].
-
-
 function distance2_face(L::HLine, A::Vector{Float64}, B::Vector{Float64}) 
-    
+    if A[1]==B[1]
+        x=A[1]
+        F1 = [x,min(A[2],B[2]),min(A[3],B[3])]
+        F2 = [x,min(A[2],B[2]),max(A[3],B[3])] 
+        F3 = [x,max(A[2],B[2]),max(A[3],B[3])] 
+        F4 = [x,max(A[2],B[2]),min(A[3],B[3])] 
+        
+    elseif A[2]==B[2]    
+        y=A[2]
+        F1 =[min(A[1],B[1]),y,min(A[3],B[3])] 
+        F2 = [min(A[1],B[1]),y,max(A[3],B[3])] 
+        F3 =[max(A[1],B[1]),y,max(A[3],B[3])] 
+        F4 = [max(A[1],B[1]),y,min(A[3],B[3])]
+           
+    elseif A[3]==B[3]
+        z=A[3]
+        F1 =[min(A[1],B[1]),min(A[2],B[2]),z] 
+        F2 =[min(A[1],B[1]),max(A[2],B[2]),z] 
+        F3 =[max(A[1],B[1]),max(A[2],B[2]),z]  
+        F4 =[max(A[1],B[1]),min(A[2],B[2]),z]
+    else
+        println("--- error in distance2_face")
+        return
+    end
     O=L.m_pt
     u=L.m_dir
-    # F1,F2,F3,F4,F,v0,w0,p0,G,P,Q,R,S,h,D;
-    # x1,y1,z1,xa,ya,za,xb,yb,zb,a1,b1,c1,a,b,xo,yo,zo,c,x,y,z,d,d1,d2,s,t,e,e1,e2,w1,v1,t0;
+    v0=F2-F1
+    w0=F4-F1
+    G=F1-O
+    p0=cross(v0,w0)
+    F=B-A
+    R=O-A
+    S=F1-O
     xo=O[1]
     yo=O[2]
     zo=O[3]
@@ -179,56 +205,15 @@ function distance2_face(L::HLine, A::Vector{Float64}, B::Vector{Float64})
     a=u[1]
     b=u[2]
     c=u[3]
-    
-    
-    if A[1]==B[1]
-        
-        x=A[1]
-        F1 = [x,min(A[2],B[2]),min(A[3],B[3])]
-        F2 = [x,min(A[2],B[2]),max(A[3],B[3])] 
-        F3 = [x,max(A[2],B[2]),max(A[3],B[3])] 
-        F4 = [x,max(A[2],B[2]),min(A[3],B[3])] 
-        
-        
-    elseif A[2]==B[2]
-        
-        y=A[2]
-        F1 =[min(A[1],B[1]),y,min(A[3],B[3])] 
-        F2 = [min(A[1],B[1]),y,max(A[3],B[3])] 
-        F3 =[max(A[1],B[1]),y,max(A[3],B[3])] 
-        F4 = [max(A[1],B[1]),y,min(A[3],B[3])]
-        
-        
-        
-    elseif A[3]==B[3]
-        
-        z=A[3]
-        F1 =[min(A[1],B[1]),min(A[2],B[2]),z] 
-        F2 =[min(A[1],B[1]),max(A[2],B[2]),z] 
-        F3 =[max(A[1],B[1]),max(A[2],B[2]),z]  
-        F4 =[max(A[1],B[1]),min(A[2],B[2]),z]
-    else
-        println("--- error in distance2_face")
-        return
-    end
-    
-    v0=F2-F1
-    w0=F4-F1
-    p0=cross(v0,w0)
-    G=F1-O
     e1=dot(G,v0)
     e2=dot(G,w0)
     e0=dot(v0,w0)
     v1=dot(v0,v0)
     w1=dot(w0,w0)
-    F=B-A
-    R=O-A
-    S=F1-O
     s=(e1*w1-e2*e0)/(v1*w1-e0*e0)
     t=(e2*v1-e1*e0)/(v1*w1-e0*e0)
     
-    if norm(cross(u,F))==0
-        
+    if norm(cross(u,F))==0    
         if s>=0 && s<=1 && t>=0 && t<=1
             
             if dot(p0,R)!=0

@@ -176,7 +176,7 @@ function equidist(H1::HLine, H2::HLine,  H3::HLine, A::Vector{Float64}, B::Vecto
                 return q4
             end
         elseif a4==xa && z3<=max(za,zb) && min(ya,yb)<=b4 && b4<=max(ya,yb)
-            println(" L'intersection de la trissectrice de  H1,  H2  et   H3 avec la face [ A B] est le segment [max(z3,min(za,zb))  max(za,zb)] ")
+            println(" L'intersection de la trissectrice de  H1,  H2  et   H3 avec la face [ A B] est le segment" [max(z3,min(za,zb))  max(za,zb)] )
             return [0,0,0]
         end
         println("La trissectrice de  H1,  H2 et  H3 ne coupe pas la face [ A B ]")
@@ -209,7 +209,7 @@ function equidist(H1::HLine, H2::HLine,  H3::HLine, A::Vector{Float64}, B::Vecto
                 return q4
             end
         elseif b4==ya && z3<=max(za,zb) && min(xa,xb)<=a4 && a4<=max(xa,xb)
-            println(" L'intersection de la trissectrice de  H1,  H2  et   H3 avec la face [ A B] est le segment [max(z3,min(za,zb))  max(za,zb)] ")
+            println(" L'intersection de la trissectrice de  H1,  H2  et   H3 avec la face [ A B] est le segment" [max(z3,min(za,zb))  max(za,zb)] )
             return [0,0,0]
         else
             println("La trissectrice de  H1,  H2 et  H3 ne coupe pas la face [ A B ]")
@@ -416,7 +416,7 @@ C3 = -2.0 * a4 * x2 +2.0*a4*x4 - 2.0*b4 * y2 +2.0*b4*y4 + x2*x2 - x4*x4 + y2*y2 
 D3= B3*B3-4.0*A3*C3
 t0= -(0.5)*((2.0* b1 * x2 - 2.0 * b1 * x4 +2.0 * d1 * y2 - 2.0 * d1 * y4 - x2 * x2 + x4 * x4 - y2 * y2 + y4 * y4 - z2 * z2 + z4 * z4) / (a1 * x2 - a1 * x4 + c1 * y2 - c1 * y4 + z2 - z4))
 q0=[a1*t0+b1, c1*t0+d1, t0]
-  if t0<= z1
+if t0<= z1
     return q0
 elseif D1>=0
     t11=(0.5)*(-B1 - sqrt(D1))/A1
