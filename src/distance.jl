@@ -264,9 +264,6 @@ function distance2_face(L::HLine, A::Vector{Float64}, B::Vector{Float64})
             Q=P-O
             d=norm(Q)
             return d
-        else
-            return d0 
-       
         elseif t0>=0 && dot(p0,D)!=0
           
             return d0
