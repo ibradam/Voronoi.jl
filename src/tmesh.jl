@@ -150,7 +150,7 @@ function cell(m::TMesh, i::Int64)
     return m.cells[i]
 end
 
-function size(m::TMesh, C::Cell)
+function Base.size(m::TMesh, C::Cell)
     p1 = point(m,C[1])
     p2 = point(m,C[8])
     norm(p2-p1,Inf)
@@ -172,8 +172,8 @@ function split_direction(m::TMesh, c::Int64)
     return v
 end
 
-function size(m::TMesh, c::Int64)
-    return size(m, cell(m,c))
+function Base.size(m::TMesh, c::Int64)
+    return Base.size(m, cell(m,c))
 end
 
 function find_vertex(m::TMesh, p::Vector, i0::Int64, i1::Int64, v)

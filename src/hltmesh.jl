@@ -33,7 +33,7 @@ function point(m::HLTMesh, i::Int64) return point(m.mesh,i) end
 
 function cell(m::HLTMesh, c::Int64)  return cell(m.mesh,c)  end
 
-function size(m::HLTMesh, c::Int64)  return size(m.mesh,c)  end
+function Base.size(m::HLTMesh, c::Int64)  return size(m.mesh,c)  end
 
 
 function closest(L::Vector{HLine}, p:: Vector{Float64})
