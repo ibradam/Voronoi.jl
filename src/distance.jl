@@ -160,12 +160,6 @@ end
 # param H,A,B
 # return the euclidean distance from the half-line H to a face of [AB].
 function distance2_face(L::HLine, A::Vector{Float64}, B::Vector{Float64}) 
-<<<<<<< HEAD
-=======
-    
-   
-    
->>>>>>> d50e19ee8c670c0d89baf82fa438920b93f6110b
     if A[1]==B[1]
         x=A[1]
         F1 = [x,min(A[2],B[2]),min(A[3],B[3])]
@@ -190,10 +184,6 @@ function distance2_face(L::HLine, A::Vector{Float64}, B::Vector{Float64})
         println("--- error in distance2_face")
         return
     end
-<<<<<<< HEAD
-    O=L.m_pt
-    u=L.m_dir
-=======
      O=L.m_pt
      u=L.m_dir
     xo=O[1]
@@ -208,7 +198,6 @@ function distance2_face(L::HLine, A::Vector{Float64}, B::Vector{Float64})
      a=u[1]
      b=u[2]
      c=u[3]
->>>>>>> d50e19ee8c670c0d89baf82fa438920b93f6110b
     v0=F2-F1
     w0=F4-F1
     G=F1-O
@@ -233,12 +222,7 @@ function distance2_face(L::HLine, A::Vector{Float64}, B::Vector{Float64})
     e0=dot(v0,w0)
     v1=dot(v0,v0)
     w1=dot(w0,w0)
-<<<<<<< HEAD
-    s=(e1*w1-e2*e0)/(v1*w1-e0*e0)
-    t=(e2*v1-e1*e0)/(v1*w1-e0*e0)
-    
-    if norm(cross(u,F))==0    
-=======
+
      F=B-A
      R=O-A
      S=F1-O
@@ -249,7 +233,6 @@ function distance2_face(L::HLine, A::Vector{Float64}, B::Vector{Float64})
       d0=min(d1,d2)
      if norm(cross(u,F))==0
         
->>>>>>> d50e19ee8c670c0d89baf82fa438920b93f6110b
         if s>=0 && s<=1 && t>=0 && t<=1
             
             if dot(p0,R)!=0
