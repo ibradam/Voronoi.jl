@@ -91,7 +91,7 @@ function regularity(m::HLTMesh, c::Int64)
     s, d = closest(m.sites, p)
 
     r = ( sqrt(d) + norm(c0-c1) )^2
-
+ 
     S = in_dist(m.sites,p,r)
 
     # if length(S)> 0
