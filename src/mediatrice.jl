@@ -1,7 +1,6 @@
 # The function equidist
 # \param H1,H2,A,B
-# returns the#=
-#equidistant point to H1 and H2 on the segment [A,B]
+# returns the equidistant point to H1 and H2 on the segment [A,B]
 function equidist(H1::HLine, H2::HLine, A::Vector{Float64}, B::Vector{Float64})    
     x1=H1.m_pt[1]
     y1=H1.m_pt[2]
@@ -85,7 +84,7 @@ delta2= -(2.0*y2*y2)*ya*yb-(2.0*x1*x1)*xa*xb-(2.0*x1*x1)*za*zb-(2.0*x2*x2)*xa*xb
 
 end
 
-# \param H1,H2,, H3, A,B
+# \param H1,H2, H3, A,B
 # returns the  equidistant point to H1 and H2 on the segment [A,B]
 # info: output variable  (0 OK, 1 outside face, 2 segment in face)
 # return the point on the trisectrice of H1, H2 and H3 on the face [A,B]
@@ -240,7 +239,7 @@ function equidist(H1::HLine, H2::HLine,  H3::HLine, A::Vector{Float64}, B::Vecto
 end
 
 # The function equidist
-# \param H1,H2,, H3, H4
+# \param H1,H2, H3, H4
 # returns the  equidistant point to H1 and H2 on the segment [A,B]
 # info: output variable 
 # return the point equidistant point from the four hlines H1, H2,H3 and H4.
