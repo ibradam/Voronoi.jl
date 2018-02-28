@@ -82,8 +82,8 @@ if (distance2(H1,A)-distance2(H2,A))*(distance2(H1,B)-distance2(H2,B))<=0
         else #if t4>=0 && t4 <= 1 && p4[3]>= b && p4[1] >= min(xa,xb) && p4[1]<=max(xa,xb) && p4[2] >= min(ya,yb) && p4[2]<=max(ya,yb)
             println(" pp4")
             return p4
-        
-
+            
+            
         end
         
     end
@@ -96,9 +96,9 @@ else
     return [0,0,0]
     
 end
-println("La mediatrice de  H1 et  H2 ne coupe pas le segment [ A B ]")
+#println("La mediatrice de  H1 et  H2 ne coupe pas le segment [ A B ]")
     
-    return [0,0,0]
+#return [0,0,0]
 
 end
 
