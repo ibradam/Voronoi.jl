@@ -204,11 +204,11 @@ function distance2_face(L::HLine, A::Vector{Float64}, B::Vector{Float64})
         h=O+t0*u
         D=h-F1
         P=F1+s*v0+t*w0
+        Q=P-O
+        d=norm(Q)
         if t0<0 && s>=0 && s<=1 && t>=0 && t<=1 
-            Q=P-O
-            d=norm(Q)
             return d
-        elseif  dot(p0,D)!=0
+        elseif t0>=0 &&  dot(p0,D)!=0
             return d0
         else             
             d=0
