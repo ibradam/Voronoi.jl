@@ -166,7 +166,8 @@ function equidist(H1::HLine, H2::HLine,  H3::HLine, A::Vector{Float64}, B::Vecto
     f3=(-0.5) * (x1 * x1 * x2 - x1 * x1 * x3 - x1 * x2 * x2 + x1 * x3 * x3 - x1 * y2 * y2 + x1 * y3 * y3 + x1 * z3 * z3 + x2 * x2 * x3 - x2 * x3 * x3 + x2 * y1 * y1 - x2 * y3 * y3 - x2 * z3 * z3 - x3 * y1 * y1 + x3 * y2 * y2) / (x1 * y2 - x1 * y3 - x2 * y1 + x2 * y3 + x3 * y1 - x3 * y2)
     a4=(0.5)* (x1 * x1 * y2 - x1 * x1 * y3 - x2 * x2 * y1 + x2 * x2 * y3 + x3 * x3 * y1 - x3 * x3 * y2 + y1 * y1 * y2 - y1 * y1 * y3 - y1 * y2 * y2 + y1 * y3 * y3 + y2 * y2 * y3 - y2 * y3 * y3) / (x1 * y2 - x1 * y3 - x2 * y1 + x2 * y3 + x3 * y1 - x3 * y2)
     b4=(-0.5)* (x1 * x1 * x2 - x1 * x1 * x3 - x1 * x2 * x2 + x1 * x3 * x3 - x1 * y2 * y2 + x1 * y3 * y3 + x2 * x2 * x3 - x2 * x3 * x3 + x2 * y1 * y1 - x2 * y3 * y3 - x3 * y1 * y1 + x3 * y2 * y2) / (x1 * y2 - x1 * y3 - x2 * y1 + x2 * y3 + x3 * y1 - x3 * y2)
-    if xa==xb
+   don= x1 * y2 - x1 * y3 - x2 * y1 + x2 * y3 + x3 * y1 - x3 * y2
+    if xa==xb && don!=0
         delta1 = b2*b2 - (4.0)*a2*(c2 - xa)
         delta2 = b3*b3 - (4.0)*a3*(c3 - xa)
         z0=(xa - b1)/a1
@@ -200,7 +201,7 @@ function equidist(H1::HLine, H2::HLine,  H3::HLine, A::Vector{Float64}, B::Vecto
         end
         println("La trissectrice de  H1,  H2 et  H3 ne coupe pas la face [ A B ]")
         return [0,0,0]
-    elseif ya==yb
+    elseif ya==yb && don!=0
         delta1=e2*e2 - (4.0)*d2*(f2 - ya)
         delta2=e3*e3 - (4.0)*d3*(f3 - ya)
         z0=(ya - d1)/c1
@@ -234,7 +235,7 @@ function equidist(H1::HLine, H2::HLine,  H3::HLine, A::Vector{Float64}, B::Vecto
             println("La trissectrice de  H1,  H2 et  H3 ne coupe pas la face [ A B ]")
             return [0,0,0]
         end
-    elseif za==zb
+    elseif za==zb && don!=0
         z0=za
         q0=[a1*z0+b1,c1*z0+d1,z0]
         q1=[a2*z0*z0+b2*z0+c2,d2*z0*z0+e2*z0+f2,z0]
