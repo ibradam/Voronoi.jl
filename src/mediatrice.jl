@@ -167,7 +167,7 @@ function equidist(H1::HLine, H2::HLine,  H3::HLine, A::Vector{Float64}, B::Vecto
     a4=(0.5)* (x1 * x1 * y2 - x1 * x1 * y3 - x2 * x2 * y1 + x2 * x2 * y3 + x3 * x3 * y1 - x3 * x3 * y2 + y1 * y1 * y2 - y1 * y1 * y3 - y1 * y2 * y2 + y1 * y3 * y3 + y2 * y2 * y3 - y2 * y3 * y3) / (x1 * y2 - x1 * y3 - x2 * y1 + x2 * y3 + x3 * y1 - x3 * y2)
     b4=(-0.5)* (x1 * x1 * x2 - x1 * x1 * x3 - x1 * x2 * x2 + x1 * x3 * x3 - x1 * y2 * y2 + x1 * y3 * y3 + x2 * x2 * x3 - x2 * x3 * x3 + x2 * y1 * y1 - x2 * y3 * y3 - x3 * y1 * y1 + x3 * y2 * y2) / (x1 * y2 - x1 * y3 - x2 * y1 + x2 * y3 + x3 * y1 - x3 * y2)
    don= x1 * y2 - x1 * y3 - x2 * y1 + x2 * y3 + x3 * y1 - x3 * y2
-    if xa==xb && don!=0
+    if xa==xb && don!=0 && a1!=0 &&  a2!=0 &&  a3!=0 
         delta1 = b2*b2 - (4.0)*a2*(c2 - xa)
         delta2 = b3*b3 - (4.0)*a3*(c3 - xa)
         z0=(xa - b1)/a1
@@ -180,19 +180,19 @@ function equidist(H1::HLine, H2::HLine,  H3::HLine, A::Vector{Float64}, B::Vecto
         q3=[xa,d3*z03*z03+e3*z03+f3,z03]
         z04=(0.5)*(-b3+sqrt(delta2))/a3
         q4=[xa,d3*z04*z04+e3*z04+f3,z04]
-        if z0<=z1 && min(ya,yb)<= q0[2] && q0[2]<=max(ya,yb)  && min(za,zb)<=q0[3] && q0[3]<=max(za,zb)
+        if  z0<=z1 && min(ya,yb)<= q0[2] && q0[2]<=max(ya,yb)  && min(za,zb)<=q0[3] && q0[3]<=max(za,zb)
             println("q0")
             return q0
-        elseif delta1 >=0 && min(ya,yb)<=q1[2] && q1[2]<=max(ya,yb) && min(za,zb)<=q1[3] && q1[3]<=max(za,zb) && z1<=z01 && z01<=z2
+        elseif delta1 >=0 &&  min(ya,yb)<=q1[2] && q1[2]<=max(ya,yb) && min(za,zb)<=q1[3] && q1[3]<=max(za,zb) && z1<=z01 && z01<=z2
             println("q1")               
             return q1
-        elseif delta1 >=0 && min(ya,yb)<=q2[2] && q2[2]<=max(ya,yb) && min(za,zb)<=q2[3] && q2[3]<=max(za,zb) && z1<=z02 && z02<=z2
+        elseif delta1 >=0  && min(ya,yb)<=q2[2] && q2[2]<=max(ya,yb) && min(za,zb)<=q2[3] && q2[3]<=max(za,zb) && z1<=z02 && z02<=z2
             println("q2")               
             return q2
-        elseif delta2 >=0 && min(ya,yb)<=q3[1] && q3[1]<=max(ya,yb) && min(za,zb)<=q3[2] && q3[2]<=max(za,zb) && z2<=z03 && z03<=z3
+        elseif delta2 >=0  && min(ya,yb)<=q3[1] && q3[1]<=max(ya,yb) && min(za,zb)<=q3[2] && q3[2]<=max(za,zb) && z2<=z03 && z03<=z3
             println("q3")               
             return q3
-        elseif delta2 >=0 & min(ya,yb)<=q4[1] && q4[1]<=max(ya,yb) && min(za,zb)<=q4[2] && q4[2]<=max(za,zb) && z2<=z04 && z04<=z3
+        elseif delta2 >=0   && min(ya,yb)<=q4[1] && q4[1]<=max(ya,yb) && min(za,zb)<=q4[2] && q4[2]<=max(za,zb) && z2<=z04 && z04<=z3
             println("q4")               
             return q4
         elseif a4==xa && z3<=max(za,zb) && min(ya,yb)<=b4 && b4<=max(ya,yb)    
@@ -202,7 +202,7 @@ function equidist(H1::HLine, H2::HLine,  H3::HLine, A::Vector{Float64}, B::Vecto
             println("La trissectrice de  H1,  H2 et  H3 ne coupe pas la face [ A B ]")
             return [0,0,0]
         end
-    elseif ya==yb && don!=0
+    elseif ya==yb && don!=0 && c1!=0 &&  d2!=0 &&  d3!=0 
         delta1=e2*e2 - (4.0)*d2*(f2 - ya)
         delta2=e3*e3 - (4.0)*d3*(f3 - ya)
         z0=(ya - d1)/c1
@@ -215,19 +215,19 @@ function equidist(H1::HLine, H2::HLine,  H3::HLine, A::Vector{Float64}, B::Vecto
         q3=[a3*z03*z03+b3*z03+c3,ya,z03]
         z04=0.5*(-e3+sqrt(delta2))/d3
         q4=[a3*z04*z04+b3*z0+c3,ya,z04]
-        if z0<z1 && min(xa,xb)<=q0[1] && q0[1]<=max(xa,xb) && min(za,zb)<=q0[3] && q0[3]<=max(za,zb)
+        if  z0<z1 && min(xa,xb)<=q0[1] && q0[1]<=max(xa,xb) && min(za,zb)<=q0[3] && q0[3]<=max(za,zb)
             println("qq0")           
             return q0
-        elseif delta1>=0 && min(xa,xb)<=q1[1] && q1[1]<=max(xa,xb) && z1<=z01 && z01<=z2 && min(za,zb)<=q1[3] && q1[3]<=max(za,zb)
+        elseif delta1>=0 &&  min(xa,xb)<=q1[1] && q1[1]<=max(xa,xb) && z1<=z01 && z01<=z2 && min(za,zb)<=q1[3] && q1[3]<=max(za,zb)
             println("qq1")               
             return q1
-        elseif delta1>=0 && min(xa,xb)<=q2[1] && q2[1]<=max(xa,xb) && z1<=z02 && z02<=z2 && min(za,zb)<=q2[3] && q2[3]<=max(za,zb)
+        elseif delta1>=0  && min(xa,xb)<=q2[1] && q2[1]<=max(xa,xb) && z1<=z02 && z02<=z2 && min(za,zb)<=q2[3] && q2[3]<=max(za,zb)
             println("qq2")               
             return q2
-        elseif delta2>=0 && min(xa,xb)<=q3[1] && q3[1]<=max(xa,xb) && min(za,zb)<=q3[3] && q3[3]<=max(za,zb) && z2<=z03 && z03<=z3
+        elseif delta2>=0  && min(xa,xb)<=q3[1] && q3[1]<=max(xa,xb) && min(za,zb)<=q3[3] && q3[3]<=max(za,zb) && z2<=z03 && z03<=z3
             println("qq3")
             return q3
-        elseif delta2>=0 && min(xa,xb)<=q4[1] && q4[1]<=max(xa,xb) && min(za,zb)<=q4[3] && q4[3]<=max(za,zb) && z2<=z04 && z04<=z3
+        elseif delta2>=0  && min(xa,xb)<=q4[1] && q4[1]<=max(xa,xb) && min(za,zb)<=q4[3] && q4[3]<=max(za,zb) && z2<=z04 && z04<=z3
             println("qq4")               
             return q4  
         elseif b4==ya && z3<=max(za,zb) && min(xa,xb)<=a4 && a4<=max(xa,xb)
