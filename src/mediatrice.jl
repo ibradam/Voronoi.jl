@@ -172,91 +172,93 @@ function equidist(H1::HLine, H2::HLine,  H3::HLine, A::Vector{Float64}, B::Vecto
         delta2 = b3*b3 - (4.0)*a3*(c3 - xa)
         z0=(xa - b1)/a1
         q0=[xa,c1*z0+d1,z0]
+        z01=(0.5)*(-b2 - sqrt(delta1))/a2
+        q1=[xa,d2*z01*z01+e2*z01+f2,z01]
+        z02=(0.5)*(-b2+sqrt(delta1))/a2
+        q2=[xa,d2*z02*z02+e2*z02+f2,z02]
+        z03=(0.5)*(-b3 - sqrt(delta2))/a3
+        q3=[xa,d3*z03*z03+e3*z03+f3,z03]
+        z04=(0.5)*(-b3+sqrt(delta2))/a3
+        q4=[xa,d3*z04*z04+e3*z04+f3,z04]
         if z0<=z1 && min(ya,yb)<= q0[2] && q0[2]<=max(ya,yb)  && min(za,zb)<=q0[3] && q0[3]<=max(za,zb)
+            println("q0")
             return q0
-        elseif delta1 >=0
-            z01=(0.5)*(-b2 - sqrt(delta1))/a2
-            q1=[xa,d2*z01*z01+e2*z01+f2,z01]
-            z02=(0.5)*(-b2+sqrt(delta1))/a2
-            q2=[xa,d2*z02*z02+e2*z02+f2,z02]
-            if min(ya,yb)<=q1[2] && q1[2]<=max(ya,yb) && min(za,zb)<=q1[3] && q1[3]<=max(za,zb) && z1<=z01 && z01<=z2
-                return q1
-            elseif min(ya,yb)<=q2[2] && q2[2]<=max(ya,yb) && min(za,zb)<=q2[3] && q2[3]<=max(za,zb) && z1<=z02 && z02<=z2
-                return q2
-            end
-        elseif delta2 >=0
-            z03=(0.5)*(-b3 - sqrt(delta2))/a3
-            q3=[xa,d3*z03*z03+e3*z03+f3,z03]
-            z04=(0.5)*(-b3+sqrt(delta2))/a3
-            q4=[xa,d3*z04*z04+e3*z04+f3,z04]
-            if min(ya,yb)<=q3[1] && q3[1]<=max(ya,yb) && min(za,zb)<=q3[2] && q3[2]<=max(za,zb) && z2<=z03 && z03<=z3
-                return q3
-            elseif min(ya,yb)<=q4[1] && q4[1]<=max(ya,yb) && min(za,zb)<=q4[2] && q4[2]<=max(za,zb) && z2<=z04 && z04<=z3
-                return q4
-            end
-        elseif a4==xa && z3<=max(za,zb) && min(ya,yb)<=b4 && b4<=max(ya,yb)
-
+        elseif delta1 >=0 && min(ya,yb)<=q1[2] && q1[2]<=max(ya,yb) && min(za,zb)<=q1[3] && q1[3]<=max(za,zb) && z1<=z01 && z01<=z2
+            println("q1")               
+            return q1
+        elseif delta1 >=0 && min(ya,yb)<=q2[2] && q2[2]<=max(ya,yb) && min(za,zb)<=q2[3] && q2[3]<=max(za,zb) && z1<=z02 && z02<=z2
+            println("q2")               
+            return q2
+        elseif delta2 >=0 && min(ya,yb)<=q3[1] && q3[1]<=max(ya,yb) && min(za,zb)<=q3[2] && q3[2]<=max(za,zb) && z2<=z03 && z03<=z3
+            println("q3")               
+            return q3
+        elseif delta2 >=0 & min(ya,yb)<=q4[1] && q4[1]<=max(ya,yb) && min(za,zb)<=q4[2] && q4[2]<=max(za,zb) && z2<=z04 && z04<=z3
+            println("q4")               
+            return q4
+        elseif a4==xa && z3<=max(za,zb) && min(ya,yb)<=b4 && b4<=max(ya,yb)    
             println(" L'intersection de la trissectrice de  H1,  H2  et  H3 avec la face [ A B] est le segment", [max(z3,min(za,zb)), max(za,zb)])
+            return [max(z3,min(za,zb)), max(za,zb)]
+        else
+            println("La trissectrice de  H1,  H2 et  H3 ne coupe pas la face [ A B ]")
             return [0,0,0]
         end
-        println("La trissectrice de  H1,  H2 et  H3 ne coupe pas la face [ A B ]")
-        return [0,0,0]
     elseif ya==yb && don!=0
         delta1=e2*e2 - (4.0)*d2*(f2 - ya)
         delta2=e3*e3 - (4.0)*d3*(f3 - ya)
         z0=(ya - d1)/c1
         q0=[a1*z0+b1,ya,z0]
+        z01=0.5*(-e2 - sqrt(delta1))/d2
+        q1=[a2*z01*z01+b2*z01+c2,ya,z01]
+        z02=0.5*(-e2+sqrt(delta1))/d2
+        q2=[a2*z02*z02+b2*z02+c2,ya,z02]
+        z03=0.5*(-e3 - sqrt(delta2))/d3
+        q3=[a3*z03*z03+b3*z03+c3,ya,z03]
+        z04=0.5*(-e3+sqrt(delta2))/d3
+        q4=[a3*z04*z04+b3*z0+c3,ya,z04]
         if z0<z1 && min(xa,xb)<=q0[1] && q0[1]<=max(xa,xb) && min(za,zb)<=q0[3] && q0[3]<=max(za,zb)
+            println("qq0")           
             return q0
-        elseif delta1>=0
-            z01=0.5*(-e2 - sqrt(delta1))/d2
-            q1=[a2*z01*z01+b2*z01+c2,ya,z01]
-            z02=0.5*(-e2+sqrt(delta1))/d2
-            q2=[a2*z02*z02+b2*z02+c2,ya,z02]
-            if min(xa,xb)<=q1[1] && q1[1]<=max(xa,xb) && z1<=z01 && z01<=z2 && min(za,zb)<=q1[3] && q1[3]<=max(za,zb)
-                return q1
-            elseif min(xa,xb)<=q2[1] && q2[1]<=max(xa,xb) && z1<=z02 && z02<=z2 && min(za,zb)<=q2[3] && q2[3]<=max(za,zb)
-                return q2
-            end
-        elseif delta2>=0
-            z03=0.5*(-e3 - sqrt(delta2))/d3
-            q3=[a3*z03*z03+b3*z03+c3,ya,z03]
-            z04=0.5*(-e3+sqrt(delta2))/d3
-            q4=[a3*z04*z04+b3*z0+c3,ya,z04]
-            if min(xa,xb)<=q3[1] && q3[1]<=max(xa,xb) && min(za,zb)<=q3[3] && q3[3]<=max(za,zb) && z2<=z03 && z03<=z3
-                return q3
-            elseif min(xa,xb)<=q4[1] && q4[1]<=max(xa,xb) && min(za,zb)<=q4[3] && q4[3]<=max(za,zb) && z2<=z04 && z04<=z3
-                return q4
-            end
+        elseif delta1>=0 && min(xa,xb)<=q1[1] && q1[1]<=max(xa,xb) && z1<=z01 && z01<=z2 && min(za,zb)<=q1[3] && q1[3]<=max(za,zb)
+            println("qq1")               
+            return q1
+        elseif delta1>=0 && min(xa,xb)<=q2[1] && q2[1]<=max(xa,xb) && z1<=z02 && z02<=z2 && min(za,zb)<=q2[3] && q2[3]<=max(za,zb)
+            println("qq2")               
+            return q2
+        elseif delta2>=0 && min(xa,xb)<=q3[1] && q3[1]<=max(xa,xb) && min(za,zb)<=q3[3] && q3[3]<=max(za,zb) && z2<=z03 && z03<=z3
+            println("qq3")
+            return q3
+        elseif delta2>=0 && min(xa,xb)<=q4[1] && q4[1]<=max(xa,xb) && min(za,zb)<=q4[3] && q4[3]<=max(za,zb) && z2<=z04 && z04<=z3
+            println("qq4")               
+            return q4  
         elseif b4==ya && z3<=max(za,zb) && min(xa,xb)<=a4 && a4<=max(xa,xb)
             println(" L'intersection de la trissectrice de  H1,  H2  et   H3 avec la face [ A B] est le segment", [max(z3,min(za,zb)),max(za,zb)] )
-            return [0,0,0]
+            return [max(z3,min(za,zb)),max(za,zb)]
         else
             println("La trissectrice de  H1,  H2 et  H3 ne coupe pas la face [ A B ]")
             return [0,0,0]
         end
-    elseif za==zb && don!=0
+    else za==zb && don!=0
         z0=za
         q0=[a1*z0+b1,c1*z0+d1,z0]
         q1=[a2*z0*z0+b2*z0+c2,d2*z0*z0+e2*z0+f2,z0]
         q2=[a3*z0*z0+b3*z0+c3,d3*z0*z0+e3*z0+f3,z0]
         q3=[a4,b4,z0]
         if z0<=z1 && min(xa,xb)<=q0[1] && q0[1]<=max(xa,xb) && min(ya,yb)<=q0[2] && q0[2]<=max(ya,yb)
+            println("qqq0")               
             return q0
         elseif z1<=z0 && z0<=z2 && min(xa,xb)<=q1[1] && q1[1]<=max(xa,xb) && min(ya,yb)<=q1[2] && q1[2]<=max(ya,yb)
+            println("qqq1")                           
             return q1
         elseif z2<=z0 && z0<=z3 && min(xa,xb)<=q2[1] && q2[1]<=max(xa,xb) && min(ya,yb)<=q2[2] && q2[2]<=max(ya,yb)
+            println("qqq2")               
             return q2
         elseif z3<=z0 && min(xa,xb)<=q3[1] && q3[1]<=max(xa,xb) && min(ya,yb)<=q3[2] && q3[2]<=max(ya,yb)
+            println("qqq3")               
             return q3
         else
             println("La trissectrice de  H1,  H2 et  H3 ne coupe pas la face [ A B ]")
-            return [0,0,0]
-            
+            return [0,0,0]                   
         end
-
-    else println("erreur dans equidist")
-        return 
     end
 end
 

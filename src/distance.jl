@@ -138,22 +138,18 @@ function distance2_face(L::HLine, A::Vector{Float64}, B::Vector{Float64})
         F2 = [x,min(A[2],B[2]),max(A[3],B[3])] 
         F3 = [x,max(A[2],B[2]),max(A[3],B[3])] 
         F4 = [x,max(A[2],B[2]),min(A[3],B[3])] 
-        # println(F1,F2,F3,F4)
     elseif A[2]==B[2]    
         y=A[2]
         F1 =[min(A[1],B[1]),y,min(A[3],B[3])] 
         F2 = [min(A[1],B[1]),y,max(A[3],B[3])] 
         F3 =[max(A[1],B[1]),y,max(A[3],B[3])] 
         F4 = [max(A[1],B[1]),y,min(A[3],B[3])]
-               #  println(F1,F2,F3,F4)
-
     elseif A[3]==B[3]
         z=A[3]
         F1 =[min(A[1],B[1]),min(A[2],B[2]),z] 
         F2 =[min(A[1],B[1]),max(A[2],B[2]),z] 
         F3 =[max(A[1],B[1]),max(A[2],B[2]),z]  
         F4 =[max(A[1],B[1]),min(A[2],B[2]),z]
-         #println(F1,F2,F3,F4)
     else
         println("--- error in distance2_face")
         return
@@ -189,7 +185,6 @@ function distance2_face(L::HLine, A::Vector{Float64}, B::Vector{Float64})
     d1= min(distance2(L, F1, F2), distance2(L,F2, F3))
     d2= min(distance2(L, F3, F4),distance2(L,F4, F1))
     d0=min(d1,d2)
-    
     if norm(cross(u,F))==0
         if s>=0 && s<=1 && t>=0 && t<=1  
             if dot(p0,R)!=0
