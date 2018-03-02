@@ -1,9 +1,16 @@
 # The function equidist
 # \param H1,H2,A,B
 # returns the equidistant point to H1 and H2 on the segment [A,B]
-function equidist(H1::HLine, H2::HLine, A::Vector{Float64}, B::Vector{Float64})    
-    
-   
+function equidist(L1::HLine, L2::HLine, A::Vector{Float64}, B::Vector{Float64})    
+    if  L1.m_pt[3] < L2.m_pt[3] 
+        H1=L1
+        H2=L2
+    else
+        H1=L2
+        H2=L1
+    end
+    a = H1.m_pt[3]
+    b = H2.m_pt[3]
     x1=H1.m_pt[1]
     y1=H1.m_pt[2]
     z1=H1.m_pt[3]
@@ -40,67 +47,37 @@ dn3=x1*xa - x1*xb - x2*xa + x2*xb + y1*ya - y1*yb - y2*ya + y2*yb
 
 
 if (distance2(H1,A)-distance2(H2,A))*(distance2(H1,B)-distance2(H2,B))<=0  
-    if  H1.m_pt[3] < H2.m_pt[3] 
-        a = H1.m_pt[3]
-        b= H2.m_pt[3]
-        p1= t1*A+(1-t1)*B
-        if   t1>=0 && t1 <= 1 && p1[3]<=a # && p1[1] >= min(xa,xb) && p1[1]<=max(xa,xb) && p1[2] >= min(ya,yb) && p1[2]<=max(ya,yb)
-            println(" p1")
-            return p1
-        elseif dn2!=0 && delta1>=0 
-            t2=t21
-            t3=t22
-            p2= t2*A+(1-t2)*B
-            p3= t3*A+(1-t3)*B
-            if  t2>=0 && t2 <= 1 && p2[3]>= a && p2[3]<=b #&& p2[1] >= min(xa,xb) && p2[1]<=max(xa,xb) && p2[2] >= min(ya,yb) && p2[2]<=max(ya,yb) 
-                println(" p2")
-                return p2
-            else # t3>=0 && t3 <= 1 && p3[3]>= a && p3[3]<=b && p3[1] >= min(xa,xb) && p3[1]<=max(xa,xb) && p3[2] >= min(ya,yb) && p3[2]<=max(ya,yb)
-                println(" p3")
-                return p3
-            end
-        else 
-            p4 = t4*A+(1-t4)*B
+   
+    p1= t1*A+(1-t1)*B
+    if   t1>=0 && t1 <= 1 && p1[3]<=a # && p1[1] >= min(xa,xb) && p1[1]<=max(xa,xb) && p1[2] >= min(ya,yb) && p1[2]<=max(ya,yb)
+        println(" p1")
+        return p1
+    elseif dn2!=0 && delta1>=0 
+        t2=t21
+        t3=t22
+        p2= t2*A+(1-t2)*B
+        p3= t3*A+(1-t3)*B
+        p4 = t4*A+(1-t4)*B
+        if  t2>=0 && t2 <= 1 && p2[3]>= a && p2[3]<=b #&& p2[1] >= min(xa,xb) && p2[1]<=max(xa,xb) && p2[2] >= min(ya,yb) && p2[2]<=max(ya,yb) 
+            println(" p2")
+            return p2
+        elseif t3>=0 && t3 <= 1 && p3[3]>= a && p3[3]<=b # && p3[1] >= min(xa,xb) && p3[1]<=max(xa,xb) && p3[2] >= min(ya,yb) && p3[2]<=max(ya,yb)
+            println(" p3")
+            return p3
+        elseif   t4>=0 && t4 <= 1 && p4[3]>=b 
             println(" p4")
             return p4
-        end
-        
-        
-    else    
-        a = H2.m_pt[3]
-        b= H1.m_pt[3]   
-        
-        p1= t1*A+(1-t1)*B
-        if  t1>=0 && t1 <= 1 && p1[3]<=a # && p1[1] >= min(xa,xb) && p1[1]<=max(xa,xb) && p1[2] >= min(ya,yb) && p1[2]<=max(ya,yb)
-            println(" pp1")
-            return p1
-        elseif dn2!=0 && delta2>=0
-            tt2=tt21
-            tt3=tt22   
-            p2= tt2*A+(1-tt2)*B  
-            p3= tt3*A+(1-tt3)*B 
-            if  tt2>=0 && tt2 <= 1 && p2[3]>= a && p2[3]<=b # && p2[1] >= min(xa,xb) && p2[1]<=max(xa,xb) && p2[2] >= min(ya,yb) && p2[2]<=max(ya,yb)
-                println(" pp2")
-                return p2         
-            else #if  tt3>=0 && tt3 <= 1 && p3[3]>= a && p3[3]<=b && p3[1] >= min(xa,xb) && p3[1]<=max(xa,xb) && p3[2] >= min(ya,yb) && p3[2]<=max(ya,yb)
-                println(" pp3")
-                return p3
-            end
-        else #if t4>=0 && t4 <= 1 && p4[3]>= b && p4[1] >= min(xa,xb) && p4[1]<=max(xa,xb) && p4[2] >= min(ya,yb) && p4[2]<=max(ya,yb)
-            p4 = t4*A+(1-t4)*B                
-            println(" pp4")
-            return p4
-        end
-        
+            
+        else
+            println("---Erreur dans equidist")
+            return [0,0,0]
+        end 
+    else
+        println("---La mediatrice de  H1 et  H2 ne coupe pas le segment [ A B ]")
+        return [0,0,0]
     end
-       
-else
-    println("---La mediatrice de  H1 et  H2 ne coupe pas le segment [ A B ]")
-    
-    return [0,0,0]
 end
 end
-
 
 
 
