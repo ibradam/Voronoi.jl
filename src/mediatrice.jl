@@ -51,19 +51,16 @@ if (distance2(H1,A)-distance2(H2,A))*(distance2(H1,B)-distance2(H2,B))<=0
             p2= t2*A+(1-t2)*B
             p3= t3*A+(1-t3)*B
             if  t2>=0 && t2 <= 1 && p2[3]>= a && p2[3]<=b && p2[1] >= min(xa,xb) && p2[1]<=max(xa,xb) && p2[2] >= min(ya,yb) && p2[2]<=max(ya,yb) 
+                println(" p3")
                 return p2
             else #if t3>=0 && t3 <= 1 && p3[3]>= a && p3[3]<=b && p3[1] >= min(xa,xb) && p3[1]<=max(xa,xb) && p3[2] >= min(ya,yb) && p3[2]<=max(ya,yb)
                 println(" p3")
                 return p3
             end
             
-        else #= if    dn3!=0
-        p4 = t4*A+(1-t4)*B
-        if t4>=0 && t4 <= 1 && p4[3]>= b && p4[1] >= min(xa,xb) && p4[1]<=max(xa,xb) && p4[2] >= min(ya,yb) && p4[2]<=max(ya,yb)
-        println(" p4")
-        return p4
-        =#
+        else 
             p4 = t4*A+(1-t4)*B
+            println(" p4")
             return p4
         end
         
