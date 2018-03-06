@@ -16,7 +16,7 @@ function equidist(L1::HLine, L2::HLine, A::Vector{Float64}, B::Vector{Float64})
     k=[0,0,1]
     a0=(dot(v,k))^2
     b0=2*dot(v,u12)
-    c0=norm(v1)^2-norm(v2)^2+ dot(v2,k)^2
+    c0=norm(v1)^2-norm(v2)^2+ (dot(v2,k))^2
     a = H1.m_pt[3]
     b = H2.m_pt[3]
     x1=H1.m_pt[1]
@@ -31,12 +31,12 @@ function equidist(L1::HLine, L2::HLine, A::Vector{Float64}, B::Vector{Float64})
     xb=B[1]
     yb=B[2]
     zb=B[3]
-    delta=b0^2-4*a0*c0
+    delta=b0^2-4.0*a0*c0
     t1=(norm(v1)^2-norm(v2))^2/(2.0*(dot(-u12,v)))
     t4=(norm(v1)^2-norm(v2)^2+(dot(v2,k))^2-(dot(v1,k))^2)/(2.0*(dot(-v,u12)-(dot(-v,k)*dot(u12,k))))
     if (distance2(H1,A)-distance2(H2,A))*(distance2(H1,B)-distance2(H2,B))<=0  
         p1= t1*A+(1-t1)*B
-        if   t1>=0 && t1 <= 1 && p1[3]<=a # && p1[1] >= min(xa,xb) && p1[1]<=max(xa,xb) && p1[2] >= min(ya,yb) && p1[2]<=max(ya,yb)
+        if   t1>=0 && t1 <= 1 && p1[3]<=a  && p1[1] >= min(xa,xb) && p1[1]<=max(xa,xb) && p1[2] >= min(ya,yb) && p1[2]<=max(ya,yb)
             println(" p1")
             return p1
         elseif a0!=0 && delta>=0 
@@ -45,22 +45,22 @@ function equidist(L1::HLine, L2::HLine, A::Vector{Float64}, B::Vector{Float64})
             p2= t2*A+(1-t2)*B
             p3= t3*A+(1-t3)*B
             p4 = t4*A+(1-t4)*B
-            if  t2>=0 && t2 <= 1 && p2[3]>= a && p2[3]<=b #&& p2[1] >= min(xa,xb) && p2[1]<=max(xa,xb) && p2[2] >= min(ya,yb) && p2[2]<=max(ya,yb) 
+            if  t2>=0 && t2 <= 1 && p2[3]>= a && p2[3]<=b && p2[1] >= min(xa,xb) && p2[1]<=max(xa,xb) && p2[2] >= min(ya,yb) && p2[2]<=max(ya,yb) 
                 println(" p2")
                 return p2
-            elseif t3>=0 && t3 <= 1 && p3[3]>= a && p3[3]<=b # && p3[1] >= min(xa,xb) && p3[1]<=max(xa,xb) && p3[2] >= min(ya,yb) && p3[2]<=max(ya,yb)
+            elseif t3>=0 && t3 <= 1 && p3[3]>= a && p3[3]<=b  && p3[1] >= min(xa,xb) && p3[1]<=max(xa,xb) && p3[2] >= min(ya,yb) && p3[2]<=max(ya,yb)
                 println(" p3")
                 return p3
             elseif   t4>=0 && t4 <= 1 && p4[3]>=b 
                 println(" p4")
                 return p4
             else
-                println("---Erreur dans equidist")
-                return [0,0,0]
+                println("---Erreur dans equidist e1")
+                return 
             end 
         else
-            println("---Erreur dans equidist")
-            return [0,0,0]
+            println("---Erreur dans equidist e2")
+            return
         end 
     else
         println("---La mediatrice de  H1 et  H2 ne coupe pas le segment [ A B ]")
