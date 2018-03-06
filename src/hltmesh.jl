@@ -11,25 +11,29 @@ end
 mutable struct HLTMesh
     sites::Vector{HLine}
     mesh ::TMesh
-    #clst ::Vector{Int64}
+    clst ::Vector{Int64}
     #dist ::Vector{Float64}
 
     function HLTMesh(L::Vector{HLine}, m::TMesh)
-        #clst = fill(0, nbv(m))
+        clst = fill(0, nbv(m))
         #dist = fill(0.0, nbv(m))
         
-        #for i in 1:nbv(m)
-        #     s, d = closest(L, point(m,i))
-            
-        #     clst[i] = s
-        #     dist[i] = d
-        # end
-        # new(L, m, clst, dist)
-        new(L,m)
+        for i in 1:nbv(m)
+            s, d = closest(L, point(m,i))
+            clst[i] = s
+            #     dist[i] = d
+        end
+        #new(L, m, clst, dist)
+        new(L, m, clst)
+        #new(L,m)
     end
 end
 
+function nbv(m::HLTMesh) return nbv(m.mesh) end
+
 function point(m::HLTMesh, i::Int64) return point(m.mesh,i) end
+
+function closest(m::HLTMesh, i::Int64) return m.clst[i] end
 
 function cell(m::HLTMesh, c::Int64)  return cell(m.mesh,c)  end
 
@@ -67,32 +71,39 @@ end
 function split_cell!(m::HLTMesh, c::Int64, v::Int64)
     np = nbv(m.mesh)
     nc = split_cell!(m.mesh,c,v)
-    # for i in np+1:nbv(m.mesh)
-    #     s, d = closest(m, point(m,i))
-    #     push!(m.clst, s )
+    for i in np+1:nbv(m.mesh)
+        s, d = closest(m, point(m,i))
+        push!(m.clst, s )
     #     push!(m.dist, d )
-    # end
+    end
     return nc
 end
+
+const OUTSIDE = 0
+const INSIDE = 1
+const BOUNDARY = 2
+const BOUNDARY_CURVE = 3
+const SINGULAR = 4
 
 function regularity(m::HLTMesh, c::Int64)
 
     C = cell(m,c)
 
-    # Clst = Set(Int64[])
-    # for i in 1:8
-    #     push!(Clst, m.clst[C[i]])
-    # end
+    Clst = Set(Int64[])
+    for i in 1:8
+         push!(Clst, m.clst[C[i]])
+    end
     
-    c0 = point(m,C[1])
-    c1 = point(m,C[8])
-    p = (c0+c1)/2.0
+    na = length(Clst)
+    
+    # c0 = point(m,C[1])
+    # c1 = point(m,C[8])
+    # p = (c0+c1)/2.0
+    # s, d = closest(m.sites, p)
 
-    s, d = closest(m.sites, p)
-
-    r = ( sqrt(d) + norm(c0-c1) )^2
+    # r = ( sqrt(d) + norm(c0-c1) )^2
  
-    S = in_dist(m.sites,p,r)
+    # S = in_dist(m.sites,p,r)
 
     # if length(S)> 0
     #     println("----- S ",S, " ::: ", Clst)
@@ -108,8 +119,8 @@ function regularity(m::HLTMesh, c::Int64)
     # end
     #na = length(Clst)
 
-    na = length(S)
-    # println("--- na ", na, " ::: ", Clst)
+
+    #println("--- na ", na) #, " ::: ", Clst)
 
     if na==1
         return OUTSIDE

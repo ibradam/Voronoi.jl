@@ -1,8 +1,4 @@
-const OUTSIDE = 0
-const INSIDE = 1
-const BOUNDARY = 2
-const BOUNDARY_CURVE = 3
-const SINGULAR = 4
+
 
 function subdivision(m, msf::Float64 = 0.2 , mcr::Float64 = msf/3, mpt = msf/10)
 
@@ -20,7 +16,6 @@ function subdivision(m, msf::Float64 = 0.2 , mcr::Float64 = msf/3, mpt = msf/10)
 
         c = pop!(L)
         r = regularity(m,c)
-
         if r != OUTSIDE
 
             if size(m,c) > szsf
@@ -33,16 +28,20 @@ function subdivision(m, msf::Float64 = 0.2 , mcr::Float64 = msf/3, mpt = msf/10)
                 push!(L, nc)
                 
             elseif r == BOUNDARY 
-            
+                
                 push!(R,c)
             
-            elseif r == BOUNDARY_CURVE && size(m,c) > szcr
+            elseif r == BOUNDARY_CURVE
+                if size(m,c) > szcr
 
-                v  = split_direction(m.mesh,c)
-                nc = split_cell!(m, c, v)
-                push!(L, c)
-                push!(L, nc)
+                    v  = split_direction(m.mesh,c)
+                    nc = split_cell!(m, c, v)
+                    push!(L, c)
+                    push!(L, nc)
 
+                else
+                    push!(R, c)
+                end
             elseif size(m,c) > szpt
 
                 v  = split_direction(m.mesh,c)
@@ -58,5 +57,4 @@ function subdivision(m, msf::Float64 = 0.2 , mcr::Float64 = msf/3, mpt = msf/10)
     end
 
     R, S
-     
 end
