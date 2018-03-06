@@ -49,18 +49,38 @@ end
 #    v=3           v=2
 #     |            /
 #     |           /
-#     |   7 ----7---- 8
+#     |   7 ----4---- 8
 #     |  /|     /    /|
-#     | 8 |    /    6 |
-#     |/  12  /    /  11
-#     5 ----4---- 6   |
+#     | 7 |    /    8 |
+#     |/  11  /    /  12
+#     5 ----3---- 6   |
 #     |   | /     |   |
-#     |   3 ----4-|-- 4
-#     8  /        9  /
-#     | 4         | 2
+#     |   3 ----2-|-- 4
+#     9  /       10  /
+#     | 5         | 6
 #     |/          |/
 #     1 ----1---- 2 --------- v = 1
 #
+
+cell_edge = [
+    [ [1,2], [3,4], [5,6], [7,8] ],
+    [ [1,3], [2,4], [5,7], [6,8] ],
+    [ [1,5], [2,6], [3,7], [4,8] ]
+]
+
+cell_face_size = 4
+
+cell_face = [
+    [ [1,3,5,7], [2,4,6,8] ],
+    [ [1,2,5,6], [3,4,7,8] ],
+    [ [1,2,3,4], [5,6,7,8] ]
+]
+
+cell_face_edge_idx = [
+    [ [5,7,9,11], [6,8,10,12] ],
+    [ [1,10,3,9], [2,4,11,12] ],
+    [ [1,2,5,6],  [3,4,7,8]   ]
+]
 
 mutable struct Cell
     corners::Vector{Int64}
@@ -70,18 +90,10 @@ mutable struct Cell
     end
 end
 
+
 function Base.getindex(c::Cell, i::Int64)
     return c.corners[i]
 end
-
-cell_face_size = 4
-
-cell_face = [
-[ [1,3,5,7], [2,4,6,8] ],
-[ [1,2,5,6], [3,4,7,8] ],
-[ [1,2,3,4], [5,6,7,8] ]
-]
-
 
 function Base.getindex(c::Cell, v::Int64, s::Int64, k::Int64)
     return c.corners[cell_face[v][s][k]]
@@ -188,12 +200,8 @@ function find_vertex(m::TMesh, p::Vector, i0::Int64, i1::Int64, v)
     return 0
 end
 
-function insert_middle!(m::TMesh, i0::Int64, i1::Int64)
-    p0 = point(m,i0)
-    p1 = point(m,i1)
-    v  = dir(p0,p1)
-
-    p = (p0 + p1)/2.0
+function insert_vertex!(m::TMesh, p::Vector{Float64},
+                        i0::Int64, i1::Int64, v::Int64)
 
     n = find_vertex(m, p, i0, i1, v)
     
@@ -205,7 +213,19 @@ function insert_middle!(m::TMesh, i0::Int64, i1::Int64)
     m.vertices[n][2*v-1]  = i0
     m.vertices[n][2*v]    = i1
     m.vertices[i1][2*v-1] = n
+
+    return n
     
+end
+
+function insert_middle!(m::TMesh, i0::Int64, i1::Int64)
+    p0 = point(m,i0)
+    p1 = point(m,i1)
+    v  = dir(p0,p1)
+    p = (p0 + p1)/2.0
+
+    return insert_vertex!(m, p, i0, i1, v)
+        
 end
 
 function insert_edge!(m, i0::Int64, i1::Int64, v::Int64)
