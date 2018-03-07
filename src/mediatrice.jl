@@ -270,7 +270,8 @@ end
 
 
 
-# The function equidist
+#= 
+#The function equidist
 # \param H1,H2,A,B
 # returns the equidistant point to H1 and H2 on the segment [A,B]
 function equidist(L1::HLine, L2::HLine, A::Vector{Float64}, B::Vector{Float64})    
@@ -349,7 +350,7 @@ function equidist(L1::HLine, L2::HLine, A::Vector{Float64}, B::Vector{Float64})
 end
 
 
-    #=
+    
     t1 = 0.5*((x1*x1-2*x1*xb - x2*x2 +2.0*x2*xb + y1*y1 - 2.0*y1*yb - y2*y2 +2.0*y2*yb + z1*z1 - 2.0*z1*zb - z2*z2 +2.0*z2*zb)/(x1*xa - x1*xb - x2*xa + x2*xb + y1*ya - y1*yb - y2*ya + y2*yb + z1*za - z1*zb - z2*za + z2*zb))
     
     dn1=x1*xa - x1*xb - x2*xa + x2*xb + y1*ya - y1*yb - y2*ya + y2*yb + z1*za - z1*zb - z2*za + z2*zb
@@ -366,7 +367,8 @@ end
     
     t4 = 0.5*((x1*x1-2*x1*xb - x2*x2 +2.0*x2*xb + y1*y1 - 2.0 *y1*yb - y2*y2 +2.0*y2*yb)/(x1*xa - x1*xb - x2*xa + x2*xb + y1*ya - y1*yb - y2*ya + y2*yb))
     dn3=x1*xa - x1*xb - x2*xa + x2*xb + y1*ya - y1*yb - y2*ya + y2*yb
-    =#
+    
+=#
 
 
 
