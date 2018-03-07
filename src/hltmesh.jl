@@ -33,7 +33,7 @@ function nbv(m::HLTMesh) return nbv(m.mesh) end
 
 function point(m::HLTMesh, i::Int64) return point(m.mesh,i) end
 
-function closest(m::HLTMesh, i::Int64) return m.clst[i] end
+function vertex(m::HLTMesh, i::Int64) return vertex(m.mesh,i) end
 
 function cell(m::HLTMesh, c::Int64)  return cell(m.mesh,c)  end
 
@@ -53,6 +53,14 @@ function closest(L::Vector{HLine}, p:: Vector{Float64})
     return s, d0
 end
 
+function closest(m::HLTMesh, p:: Vector{Float64})
+    return closest(m.sites,p)
+end
+
+function closest(m::HLTMesh, i::Int64) return m.clst[i] end
+
+
+
 function in_dist(L::Vector{HLine}, p:: Vector{Float64}, d0::Float64)
     S= Int64[]
     for i in 1:length(L)
@@ -64,10 +72,6 @@ function in_dist(L::Vector{HLine}, p:: Vector{Float64}, d0::Float64)
     return S
 end
 
-function closest(m::HLTMesh, p:: Vector{Float64})
-    return closest(m.sites,p)
-end
-
 function split_cell!(m::HLTMesh, c::Int64, v::Int64)
     np = nbv(m.mesh)
     nc = split_cell!(m.mesh,c,v)
@@ -77,6 +81,21 @@ function split_cell!(m::HLTMesh, c::Int64, v::Int64)
     #     push!(m.dist, d )
     end
     return nc
+end
+
+function insert_vertex!(m::HLTMesh, p::Vector{Float64},
+                        i0::Int64, i1::Int64, v::Int64, s::Int64)
+    np = insert_vertex!(m.mesh, p, i0, i1, v)
+    push!(m.clst, s)
+    return np
+end
+
+function insert_vertex!(m::HLTMesh, p::Vector{Float64},
+                        i0::Int64, i1::Int64, v::Int64)
+    np = insert_vertex!(m.mesh, p, i0, i1, v)
+    s, d = closest(m, p)
+    push!(m.clst, s)
+    return np
 end
 
 const OUTSIDE = 0

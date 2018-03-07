@@ -1,3 +1,6 @@
+using SemiAlgebraicTypes
+
+import SemiAlgebraicTypes: nbv, push_vertex!, push_edge!, push_face!
 
 mutable struct Vertex
 
@@ -7,7 +10,6 @@ mutable struct Vertex
     m_id::Int64
     # The tag of the point
     m_tag::Int64
-
 
     function Vertex()
         new(0, [0,0,0,0,0,0], 0, 0)
@@ -131,7 +133,7 @@ function tmesh(P::Vector{Vector{Float64}})
     return m
 end
 
-function nbv(m::TMesh)
+function SemiAlgebraicTypes.nbv(m::TMesh)
     return length(m.vertices)
 end
 
@@ -139,9 +141,9 @@ function nbc(m::TMesh)
     return length(m.cells)
 end
 
-function push_vertex!(m::TMesh, p::Vector{Float64})
+function SemiAlgebraicTypes.push_vertex!(m::TMesh, p::Vector{Float64})
     m.points = hcat(m.points, p)
-    push!(m.vertices,Vertex())
+    push!(m.vertices, Vertex())
     return length(m.vertices)
 end
 

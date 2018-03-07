@@ -1,28 +1,36 @@
 # Insert in m the point of the medial axis on 
 function insert_ma!(m::HLTMesh, i1::Int64, i2::Int64, v::Int64)
-    pt = (point(m,i1)+point(m,i2))/2
-    np = insert_vertex!(m.mesh, pt, i1, i2, v)
-    return np
-end
-
-function insert_ma!(m::HLTMesh, c::Int64)
-
-end
-
-function insert_center!(m::HLTMesh, C::Cell)
-
+    l1 = closest(m,i1)
+    i = i1
+    j = next(vertex(m,i1),v)
+    
+    while closest(m,j) == l1 && i !=0 && j !=0  
+        i = j
+        j = next(vertex(m,i),v)
+    end
+    if closest(m,j) == 0
+        return j
+    else
+        pt = (point(m,i)+point(m,j))/2
+        # L1 =  m.sites[closest(m,i)]
+        # L2 =  m.sites[closest(m,j)]
+        # pt = equidist(L1, L2, point(m,i), point(m,j) )
+        np = insert_vertex!(m, pt, i, j, v, 0)
+        return np
+    end
 end
 
 function mesher(m::HLTMesh, R::Vector{Int64}, S::Vector{Int64})
 
+    # Output mesh
     M = mesh(Float64)
 
+    # Dictionary between vertices of m and M
     H2M = Dict{Int64,Int64}()
 
     # Graph of point connections, 
-    E = Dict{Tuple{Int64,Int64}, Array{Tuple{Int64,Int64}}}()
+    # E = Dict{Tuple{Int64,Int64}, Array{Tuple{Int64,Int64}}}()
     
-
     for c in R
         C = cell(m,c)
         #println(C)
@@ -38,21 +46,26 @@ function mesher(m::HLTMesh, R::Vector{Int64}, S::Vector{Int64})
                 nv = nbv(m)
                 ### Add the medial axis point on the edge
                 np = insert_ma!(m, C[e[1]], C[e[2]], v)
+                #println("--- ", np, "     ", nv)
+
                 ### Add new point to M
                 if np != 0 && np == nv+1
-                    SemiAlgebraicTypes.push_vertex!(M, point(m,np))
-                    H2M[np]=SemiAlgebraicTypes.nbv(M)
+                    push_vertex!(M, point(m,np))
+                    H2M[np] = nbv(M)
+                    #println("... ", np, " ==> ",nbv(M))
                 end
             end
             push!(edge_pts, np)
         end
-        # println(" ::: E ", edge_pts, "\n    ")
+        #println("::: E ", edge_pts, "\n    ")
 
         ### Faces of the cell
         face_pts = Int64[]
 
-        LE = Vector{Int64}[]
+        cl_edges = Vector{Int64}[]
 
+        cl_bpts = Int64[]
+        
         for v in 1:3, s in 1:2
             f = cell_face[v][s]
 
@@ -61,17 +74,20 @@ function mesher(m::HLTMesh, R::Vector{Int64}, S::Vector{Int64})
 
             np = 0
             if length(S) == 2
-                SemiAlgebraicTypes.push_edge!(M, [H2M[S[1]], H2M[S[2]]])
-                push!(LE, [H2M[S[1]], H2M[S[2]]])
                 ### connect the two pts
+                #println("... S ",S)
+                #push_edge!(M, [H2M[S[1]], H2M[S[2]]])
+                push!(cl_edges, [H2M[S[1]], H2M[S[2]]])
+
             elseif length(S) > 2
                 ## Median point on the face
                 p = sum(point(m,i) for i in S)/length(S)
-                SemiAlgebraicTypes.push_vertex!(M,p)
-                nv = SemiAlgebraicTypes.nbv(M)
+                push_vertex!(M, p)
+                nv = nbv(M)
+                push!(cl_bpts, nv)
                 for p in S
-                    SemiAlgebraicTypes.push_edge!(M, [nv,H2M[p]])
-                    push!(LE,[nv,H2M[p]])
+                    #push_edge!(M, [nv, H2M[p]])
+                    push!(cl_edges, [nv, H2M[p]])
                 end
                 ### np = insert_ma!(m, [c[i] for i in f], v)
                 ### connect np to edge_pts
@@ -83,13 +99,17 @@ function mesher(m::HLTMesh, R::Vector{Int64}, S::Vector{Int64})
         ## np = insert_center!(m,S)
         S = filter(t-> t!=0, edge_pts)
         p = sum(point(m,i) for i in S)/length(S)
-        SemiAlgebraicTypes.push_vertex!(M,p)
-        nv = SemiAlgebraicTypes.nbv(M)
-        for e in LE
-            SemiAlgebraicTypes.push_face!(M,[nv,e[1],e[2]])
+        push_vertex!(M, p)
+        nv = nbv(M)
+        ## connect nv to edges and face_pts
+        for e in cl_edges
+            push_face!(M,[nv,e[1],e[2]])
         end
+        for i in cl_bpts
+            push_edge!(M,[nv,i])
+        end
+         #push_edge!(M, [nv, H2M[p]])
 
-        ## connect np to edge_pts and face_pts
     end
 
     ## Remove edges of big cells adjacent to smaller cells

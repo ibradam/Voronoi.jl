@@ -24,7 +24,7 @@ closest(L, [0.25,0.25,0.1])
 
 m = HLTMesh(L,tmesh(P))
 
-R, S = subdivision(m,1.0,1.,1.)
+R, S = subdivision(m,0.7,0.5,1.)
 
 m0 = mesher(m, R, S)
 m0[:color]=Color(255,0,0)
