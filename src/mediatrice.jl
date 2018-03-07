@@ -37,13 +37,13 @@ function equidist1(L1::HLine, L2::HLine, A::Vector{Float64}, B::Vector{Float64})
         p1= t1*A+(1-t1)*B
         if   t1>=0 && t1 <= 1   #&& p1[3]<=a  && p1[1] >= min(xa,xb) && p1[1]<=max(xa,xb) && p1[2] >= min(ya,yb) && p1[2]<=max(ya,yb)
             println(" p1")
-            return p1 ,t1
+            return p1
         else  println("---Erreur dans equidist ou voir 2ème partie")
-            return 
+            return Float64[] 
         end  
     else
         println("---La mediatrice de  H1 et  H2 ne coupe pas le segment [ A B ]")
-        return [0,0,0]    
+        return Float64[]    
     end
 end
 
@@ -105,23 +105,23 @@ if (distance2(H1,A)-distance2(H2,A))*(distance2(H1,B)-distance2(H2,B))<=0
         p3= t2*A+(1-t2)*B
         if  t1>=0 && t1 <= 1  # && p2[3]>= a && p2[3]<=b && p2[1] >= min(xa,xb) && p2[1]<=max(xa,xb) && p2[2] >= min(ya,yb) && p2[2]<=max(ya,yb) 
             println(" p2")
-            return p2,t1
+            return p2
         else #if t3>=0 && t3 <= 1  && p3[3]>= a && p3[3]<=b  && p3[1] >= min(xa,xb) && p3[1]<=max(xa,xb) && p3[2] >= min(ya,yb) && p3[2]<=max(ya,yb)
             println(" p3")
-            return p3,t2
+            return p3
         end
     elseif a0==0 && t0>=0 && t0 <= 1
         t23=(0.50)*(x1 * x1 - 2 * x1 * xb - x2 * x2 + 2 * x2 * xb + y1 * y1 - 2 * y1 * yb - y2 * y2 + 2 * y2 * yb + z2 * z2 - 2 * z2 * za + za * za) / (x1 * xa - x1 * xb - x2 * xa + x2 * xb + y1 * ya - y1 * yb - y2 * ya + y2 * yb)
         p23= t23*A+(1-t23)*B
         println(" p23")
-        return p23,t23
+        return p23
     else  
         println("---Erreur dans equidist ou voir 3ème partie")
-        return 
+        return Float64[] 
     end 
 else 
     println("---La mediatrice de  H1 et  H2 ne coupe pas le segment [ A B ]")
-    return [0,0,0]    
+    return Float64[]  
 end
 end
 
@@ -170,13 +170,13 @@ function equidist3(L1::HLine, L2::HLine, A::Vector{Float64}, B::Vector{Float64})
         p4= t4*A+(1-t4)*B
         if   t4>=0 && t4 <= 1  # && p4[3]<=a  && p4[1] >= min(xa,xb) && p4[1]<=max(xa,xb) && p4[2] >= min(ya,yb) && p4[2]<=max(ya,yb)
             println(" p4")
-            return p4,t4
+            return p4
         else  println("---Erreur dans equidist ou voir 2ème ou 1ème partie")
-            return 
+            return Float64[]  
         end  
     else
         println("---La mediatrice de  H1 et  H2 ne coupe pas le segment [ A B ]")
-        return [0,0,0]    
+        return Float64[]    
     end
 end
 
@@ -186,7 +186,9 @@ end
 # The function equidist
 # \param H1,H2,A,B
 # returns the equidistant point to H1 and H2 on the segment [A,B]
-function equidist4(L1::HLine, L2::HLine, A::Vector{Float64}, B::Vector{Float64})    
+function equidist(L1::HLine, L2::HLine, A::Vector{Float64}, B::Vector{Float64}) 
+    H1=L1
+    H2=L2    
     if  L1.m_pt[3] < L2.m_pt[3]
         H1=L1
         H2=L2 
@@ -208,61 +210,61 @@ function equidist4(L1::HLine, L2::HLine, A::Vector{Float64}, B::Vector{Float64})
         if za==zb
             if za<=a
                 println("etp11")
-                return equidist1(L1,L2, A,B)
+                return equidist1(L1,H2, A,B)
             elseif za>=a && za<=b
                 println("etp12")
-                return equidist2(L1,L2, A,B)
+                return equidist2(H1,H2, A,B)
             else
                 println("etp13")
-                return equidist3(L1,L2, A,B) 
+                return equidist3(H1,H2, A,B) 
             end
         else
             if max(za,zb)<=a
                 println("etp21")
-                return equidist1(L1,L2, A,B)
+                return equidist1(H1,H2, A,B)
             elseif min(za,zb)<=a && max(za,zb)>=a && max(za,zb)<=b 
-                if equidist1(L1,L2, A,B) !=[0,0,0]
+                if length(equidist1(H1,H2, A,B))>0
                     println("etp22")
-                    return equidist1(L1,L2, A,B) 
+                    return equidist1(H1,H2, A,B) 
                 else 
                     println("etp23")
-                    return equidist2(L1,L2, A,B) 
+                    return equidist2(H1,H2, A,B) 
                 end
             elseif min(za,zb)<=a && max(za,zb)>=b
-                if equidist1(L1,L2, A,B) !=[0,0,0]
+                if length(equidist1(H1,H2, A,B))>0
                     println("etp23")
-                    return equidist1(L1,L2, A,B) 
-                elseif equidist2(L1,L2, A,B) !=[0,0,0]
+                    return equidist1(H1,H2, A,B) 
+                elseif  length(equidist2(H1,H2, A,B))>0
                     println("etp24")
-                    return equidist2(L1,L2, A,B) 
+                    return equidist2(H1,H2, A,B) 
                 else 
                     println("etp25")
-                    return  equidist3(L1,L2, A,B)
+                    return  equidist3(H1,H2, A,B)
                 end
             elseif min(za,zb)>=a && max(za,zb)<=b
                 println("etp26")
-                return equidist2(L1,L2, A,B)
+                return equidist2(H1,H2, A,B)
             elseif min(za,zb)>=a   &&  min(za,zb)<=b && max(za,zb)>=b
-                if equidist2(L1,L2, A,B) !=[0,0,0]
+                if length(equidist2(H1,H2, A,B))>0
                     println("etp27")
-                    return equidist2(L1,L2, A,B) 
+                    return equidist2(H1,H2, A,B) 
                 else 
                     println("etp27")
-                    return equidist3(L1,L2, A,B)
+                    return equidist3(H1,H2, A,B)
                 end      
                 
             elseif   min(za,zb)>=b
                 println("etp28")
-                return equidist3(L1,L2, A,B)
+                return equidist3(H1,H2, A,B)
             else 
                 println("---Erreur dans equidist4 ")
-                return 
+                return Float64[]
             end
             
         end
         
     else println("---La mediatrice de  H1 et  H2 ne coupe pas le segment [ A B ]")
-        return [0,0,0]
+        return Float64[]
     end
     
 end
@@ -274,7 +276,7 @@ end
 #The function equidist
 # \param H1,H2,A,B
 # returns the equidistant point to H1 and H2 on the segment [A,B]
-function equidist(L1::HLine, L2::HLine, A::Vector{Float64}, B::Vector{Float64})    
+function equidist(H1::HLine, L2::HLine, A::Vector{Float64}, B::Vector{Float64})    
     if  L1.m_pt[3] < L2.m_pt[3] 
         H1=L1
         H2=L2
