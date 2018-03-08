@@ -5,7 +5,7 @@
 
 function distance2(H::HLine,p::Vector{Float64})
     u = p - H.m_pt
-    s = dot(H.m_dir, u)
+    s = dot(H.m_dir, u)/norm(H.m_dir)
     if s<0
         return norm(u)^2
     else
