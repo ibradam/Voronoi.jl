@@ -60,8 +60,6 @@ function mesher(m::HLTMesh, R::Vector{Int64}, S::Vector{Int64})
         #println("::: E ", edge_pts, "\n    ")
 
         ### Faces of the cell
-        face_pts = Int64[]
-
         cl_edges = Vector{Int64}[]
 
         cl_bpts = Int64[]
@@ -92,7 +90,6 @@ function mesher(m::HLTMesh, R::Vector{Int64}, S::Vector{Int64})
                 ### np = insert_ma!(m, [c[i] for i in f], v)
                 ### connect np to edge_pts
             end
-            push!(face_pts,np)
         end
 
         ### Center of the cell
@@ -105,10 +102,12 @@ function mesher(m::HLTMesh, R::Vector{Int64}, S::Vector{Int64})
         for e in cl_edges
             push_face!(M,[nv,e[1],e[2]])
         end
+
+        ## Add edges between centers of faces and center of cell
         for i in cl_bpts
             push_edge!(M,[nv,i])
         end
-         #push_edge!(M, [nv, H2M[p]])
+        #push_edge!(M, [nv, H2M[p]])
 
     end
 
