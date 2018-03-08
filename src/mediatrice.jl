@@ -167,23 +167,25 @@ function equidist3(L1::HLine, L2::HLine, A::Vector{Float64}, B::Vector{Float64})
     #t4=(norm(v1)^2-norm(v2)^2+(dot(v2,k))^2-(dot(v1,k))^2)/(2.0*(dot(-v,u12)-(dot(-v,k)*dot(u12,k))))
     dn=x1*xa - x1*xb - x2*xa + x2*xb + y1*ya - y1*yb - y2*ya + y2*yb
     if (distance2(H1,A)-distance2(H2,A))*(distance2(H1,B)-distance2(H2,B))<=0  
-        if   dn!=0 
+  
             t4 = (0.5)*((x1*x1-2*x1*xb - x2*x2 +2.0*x2*xb + y1*y1 - 2.0 *y1*yb - y2*y2 +2.0*y2*yb)/(x1*xa - x1*xb - x2*xa + x2*xb + y1*ya - y1*yb - y2*ya + y2*yb))
             p4= t4*A+(1-t4)*B
+      if   dn!=0 && t4>=0 && t4 <= 1
             # if   t4>=0 && t4 <= 1 # && p4[3]<=a  && p4[1] >= min(xa,xb) && p4[1]<=max(xa,xb) && p4[2] >= min(ya,yb) && p4[2]<=max(ya,yb)
             println(" p4")
             return p4
-        else dn==0
-           return     
+        elseif dn==0
+            println("l'intersection est un segment d'extremité inférieure le point ci-dessous:")
+            return Float64[xa,ya, max(b,min(za,zb)) ] 
         else  println("---Erreur dans equidist ou voir 2ème ou 1ème partie")
-                return Float64[]  
-            end  
-        else
-            println("---La mediatrice de  H1 et  H2 ne coupe pas le segment [ A B ]")
-            return Float64[]    
-        end
+            return Float64[]  
+        end  
+    else
+        println("---La mediatrice de  H1 et  H2 ne coupe pas le segment [ A B ]")
+        return Float64[]    
+    end
 end
-    
+
 
 
 
