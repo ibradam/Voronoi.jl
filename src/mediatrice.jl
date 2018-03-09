@@ -175,7 +175,7 @@ function equidist3(L1::HLine, L2::HLine, A::Vector{Float64}, B::Vector{Float64})
             println(" p4")
             return p4
         elseif dn==0
-            println("l'intersection est un segment d'extremité inférieure le point ci-dessous:")
+            println("l'intersection est un segment d'extremité inférieure le point:",[xa,ya, max(b,min(za,zb)) ] )
             return Float64[xa,ya, max(b,min(za,zb)) ] 
         else  println("---Erreur dans equidist ou voir 2ème ou 1ème partie")
             return Float64[]  
@@ -446,7 +446,7 @@ function equidist(H1::HLine, H2::HLine,  H3::HLine, A::Vector{Float64}, B::Vecto
     a4=(0.5)* (x1 * x1 * y2 - x1 * x1 * y3 - x2 * x2 * y1 + x2 * x2 * y3 + x3 * x3 * y1 - x3 * x3 * y2 + y1 * y1 * y2 - y1 * y1 * y3 - y1 * y2 * y2 + y1 * y3 * y3 + y2 * y2 * y3 - y2 * y3 * y3) / (x1 * y2 - x1 * y3 - x2 * y1 + x2 * y3 + x3 * y1 - x3 * y2)
     b4=(-0.5)* (x1 * x1 * x2 - x1 * x1 * x3 - x1 * x2 * x2 + x1 * x3 * x3 - x1 * y2 * y2 + x1 * y3 * y3 + x2 * x2 * x3 - x2 * x3 * x3 + x2 * y1 * y1 - x2 * y3 * y3 - x3 * y1 * y1 + x3 * y2 * y2) / (x1 * y2 - x1 * y3 - x2 * y1 + x2 * y3 + x3 * y1 - x3 * y2)
     don= x1 * y2 - x1 * y3 - x2 * y1 + x2 * y3 + x3 * y1 - x3 * y2
-    if xa==xb && don!=0 && a1!=0 &&  a2!=0 &&  a3!=0 
+    if xa==xb && don!=0  &&  a2!=0 &&  a3!=0 
         delta1 = b2*b2 - (4.0)*a2*(c2 - xa)
         delta2 = b3*b3 - (4.0)*a3*(c3 - xa)
         z0=(xa - b1)/a1
@@ -455,10 +455,14 @@ function equidist(H1::HLine, H2::HLine,  H3::HLine, A::Vector{Float64}, B::Vecto
         q1=[xa,d2*z01*z01+e2*z01+f2,z01]
         z02=(0.5)*(-b2+sqrt(delta1))/a2
         q2=[xa,d2*z02*z02+e2*z02+f2,z02]
+        z12=(xa-c2)/b2
+        q12=[xa,d2*z12*z12+e2*z12+f2,z12]
         z03=(0.5)*(-b3 - sqrt(delta2))/a3
         q3=[xa,d3*z03*z03+e3*z03+f3,z03]
         z04=(0.5)*(-b3+sqrt(delta2))/a3
         q4=[xa,d3*z04*z04+e3*z04+f3,z04]
+        z34=
+        q34=[xa,d3*z04*z04+e3*z04+f3,z04]
         if  z0<=z1 && min(ya,yb)<= q0[2] && q0[2]<=max(ya,yb)  && min(za,zb)<=q0[3] && q0[3]<=max(za,zb)
             println("q0")
             return q0

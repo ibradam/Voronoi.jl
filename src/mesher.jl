@@ -11,10 +11,10 @@ function insert_ma!(m::HLTMesh, i1::Int64, i2::Int64, v::Int64)
     if closest(m,j) == 0
         return j
     else
-        pt = (point(m,i)+point(m,j))/2
-        # L1 =  m.sites[closest(m,i)]
-        # L2 =  m.sites[closest(m,j)]
-        # pt = equidist(L1, L2, point(m,i), point(m,j) )
+        # pt = (point(m,i)+point(m,j))/2
+        L1 =  m.sites[closest(m,i)]
+        L2 =  m.sites[closest(m,j)]
+        pt = equidist(L1, L2, point(m,i), point(m,j) )
         np = insert_vertex!(m, pt, i, j, v, 0)
         return np
     end
