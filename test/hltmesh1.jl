@@ -30,3 +30,5 @@ m0 = mesher(m, R, S)
 m0[:color]=Color(255,0,0)
 m0[:size]=0.3
 m0
+
+@axlview m, m0
