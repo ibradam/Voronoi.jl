@@ -175,8 +175,8 @@ function equidist3(L1::HLine, L2::HLine, A::Vector{Float64}, B::Vector{Float64})
             println(" p4")
             return p4
         elseif dn==0
-            println("l'intersection est un segment d'extremité inférieure le point:",[xa,ya, max(b,min(za,zb)) ] )
-            return Float64[xa,ya, max(b,min(za,zb)) ] 
+            println("l'intersection est un segment d'extremité inférieure le point:",[xa,ya, (max(b,min(za,zb))+max(za,zb))/(2.0) ] )
+            return Float64[xa,ya, (max(b,min(za,zb))+max(za,zb))/(2.0) ] 
         else  println("---Erreur dans equidist ou voir 2ème ou 1ème partie")
             return Float64[]  
         end  
@@ -461,8 +461,8 @@ function equidist(H1::HLine, H2::HLine,  H3::HLine, A::Vector{Float64}, B::Vecto
         q3=[xa,d3*z03*z03+e3*z03+f3,z03]
         z04=(0.5)*(-b3+sqrt(delta2))/a3
         q4=[xa,d3*z04*z04+e3*z04+f3,z04]
-        z34=
-        q34=[xa,d3*z04*z04+e3*z04+f3,z04]
+        z34=(0.50)*(za+zb)
+        q34=[xa,d3*z34*z34+e3*z34+f3,z34]
         if  z0<=z1 && min(ya,yb)<= q0[2] && q0[2]<=max(ya,yb)  && min(za,zb)<=q0[3] && q0[3]<=max(za,zb)
             println("q0")
             return q0
