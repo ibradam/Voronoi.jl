@@ -1,5 +1,5 @@
-# Insert in m the point of the medial axis on 
-function insert_ma!(m::HLTMesh, i1::Int64, i2::Int64, v::Int64)
+# Insert in m the point of the medial axis between i1 and i2
+function insert_equidist!(m::HLTMesh, i1::Int64, i2::Int64, v::Int64)
     l1 = closest(m,i1)
     i = i1
     j = next(vertex(m,i1),v)
@@ -8,6 +8,7 @@ function insert_ma!(m::HLTMesh, i1::Int64, i2::Int64, v::Int64)
         i = j
         j = next(vertex(m,i),v)
     end
+    
     if closest(m,j) == 0
         return j
     else
@@ -15,7 +16,9 @@ function insert_ma!(m::HLTMesh, i1::Int64, i2::Int64, v::Int64)
         L1 =  m.sites[closest(m,i)]
         L2 =  m.sites[closest(m,j)]
         pt = equidist(L1, L2, point(m,i), point(m,j) )
+        #println("equidist ", pt, "  ", nbv(m))
         np = insert_vertex!(m, pt, i, j, v, 0)
+        #println("equidist ", np, "   ", point(m,np), "   ", closest(m,np) )
         return np
     end
 end
@@ -44,16 +47,17 @@ function mesher(m::HLTMesh, R::Vector{Int64}, S::Vector{Int64})
             #         closest(m,C[e[1]]), " ", closest(m,C[e[2]]))
             if closest(m,C[e[1]]) != closest(m,C[e[2]])
                 nv = nbv(m)
+                
                 ### Add the medial axis point on the edge
-                np = insert_ma!(m, C[e[1]], C[e[2]], v)
+                np = insert_equidist!(m, C[e[1]], C[e[2]], v)
                 #println("--- ", np, "     ", nv)
 
-                ### Add new point to M
-                if np != 0 && np == nv+1
+                ### Add the equidistant point to M
+                if getkey(H2M, np, 0) == 0
                     push_vertex!(M, point(m,np))
                     H2M[np] = nbv(M)
-                    #println("... ", np, " ==> ",nbv(M))
                 end
+
             end
             push!(edge_pts, np)
         end
@@ -87,7 +91,7 @@ function mesher(m::HLTMesh, R::Vector{Int64}, S::Vector{Int64})
                     #push_edge!(M, [nv, H2M[p]])
                     push!(cl_edges, [nv, H2M[p]])
                 end
-                ### np = insert_ma!(m, [c[i] for i in f], v)
+                ### np = insert_equidist!(m, [c[i] for i in f], v)
                 ### connect np to edge_pts
             end
         end

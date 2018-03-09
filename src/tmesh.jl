@@ -202,29 +202,31 @@ function find_vertex(m::TMesh, p::Vector, i0::Int64, i1::Int64, v)
     return 0
 end
 
+# Insert point between two adjacent vertices.
 function insert_vertex!(m::TMesh, p::Vector{Float64},
                         i0::Int64, i1::Int64, v::Int64)
 
-    n = find_vertex(m, p, i0, i1, v)
-    
-    if n==0 
+    #println("tmesh::insert_vertex")
+    if isapprox(p[v],point(m,i0)[v])
+        return i0
+    elseif isapprox(p[v],point(m,i1)[v])
+        return i1
+    else
         n = push_vertex!(m, p)
-    end
-    
-    m.vertices[i0][2*v]   = n
-    m.vertices[n][2*v-1]  = i0
-    m.vertices[n][2*v]    = i1
-    m.vertices[i1][2*v-1] = n
 
-    return n
-    
+        m.vertices[i0][2*v]   = n
+        m.vertices[n][2*v-1]  = i0
+        m.vertices[n][2*v]    = i1
+        m.vertices[i1][2*v-1] = n
+        return n
+    end
 end
 
 function insert_middle!(m::TMesh, i0::Int64, i1::Int64)
     p0 = point(m,i0)
     p1 = point(m,i1)
     v  = dir(p0,p1)
-    p = (p0 + p1)/2.0
+    p  = (p0 + p1)/2.0
 
     return insert_vertex!(m, p, i0, i1, v)
         
