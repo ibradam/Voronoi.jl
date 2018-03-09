@@ -216,7 +216,7 @@ function equidist(L1::HLine, L2::HLine, A::Vector{Float64}, B::Vector{Float64})
         if za==zb
             if za<=a
                 println("etp11")
-                return equidist1(L1,H2, A,B)
+                return equidist1(H1,H2, A,B)
             elseif za>=a && za<=b
                 println("etp12")
                 return equidist2(H1,H2, A,B)

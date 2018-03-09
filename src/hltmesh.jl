@@ -1,12 +1,3 @@
-function distance2(H::HLine,p::Vector{Float64})
-    u = p - H.m_pt
-    s = dot(H.m_dir, u)/norm(H.m_dir)
-    if s<0
-        return norm(u)^2
-    else
-        return norm(u)^2-s^2
-    end
-end
 
 mutable struct HLTMesh
     sites::Vector{HLine}
@@ -87,10 +78,13 @@ function insert_vertex!(m::HLTMesh, p::Vector{Float64},
                         i0::Int64, i1::Int64, v::Int64, s::Int64)
     n = nbv(m)
     np = insert_vertex!(m.mesh, p, i0, i1, v)
-    if np != n
+    #println("hltmesh::insert_vertex ", np, "  ", n)
+    if np > n
+        #println("insert_vertex ", np,"  ", " new ",s )
         push!(m.clst, s)
     else
-        m.clst[np]=s
+        #println("insert_vertex ", np,"  ", m.clst[np], " => ",s )
+        #m.clst[np]=s
     end
     return np
 end
