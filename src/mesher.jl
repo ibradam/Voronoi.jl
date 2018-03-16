@@ -71,36 +71,42 @@ function mesher(m::HLTMesh, R::Vector{Int64}, S::Vector{Int64}, t::SbdTree)
 
     L = Tuple{Int64,Int64,Int64}[]
     dual_vertex(L, m.mesh, t.root)
-    
     for l in L
-        if getkey(Ctr, l[1], 0) !=0  && getkey(Ctr, l[2], 0) != 0
-            push_edge!(M, [Ctr[l[1]], Ctr[l[2]]])
-        end
-    end
+        if getkey(Ctr, l[1], 0) !=0  && getkey(Ctr, l[2], 0) != 0 
+            a = l[3]
+            # println(" a: ", a)
+            if a > 6
+                println(" a: ", a)
+                push_edge!(M, [ Ctr[l[1]], Ctr[l[2]] ])
+                continue
+            elseif a > 0
+                c1 = l[1]
+                c2 = l[2]
+            else
+                c1 = l[2]
+                c2 = l[1]
+                a *= -1
+            end
+            v = div(a-1,2)+1
+            s = rem(a-1,2)+1
 
-    for c in R
-        ### Faces of the cell
-        for v in 1:3, s in 1:2
-            f = cell_face[v][s]
-            S = filter(t-> t!=0, [Pts[c][i] for i in cell_face_edge_idx[v][s]])
+            S = filter(t-> t!=0, [Pts[c1][i] for i in cell_face_edge_idx[v][s]])
 
-            np = 0
             if length(S) == 2
                 ### connect the two pts
-                push_face!(M, [Ctr[c], S[1], S[2]])
+                push_face!(M, [Ctr[c1], S[1], S[2]])
+                push_face!(M, [Ctr[c2], S[1], S[2]])
             elseif length(S) > 2
                 ## Median point on the face
                 p = sum(M.points[:,i] for i in S)/length(S)
                 push_vertex!(M, p)
                 nv = nbv(M)
                 for p in S
-                    push_face!(M, [Ctr[c], nv, p])
+                    push_face!(M, [ Ctr[c1], nv, p])
+                    push_face!(M, [ Ctr[c2], nv, p])
                 end
-                
-                # push_edge!(M,[Ctr[c], nv])
             end
         end
-
     end
 
     return M

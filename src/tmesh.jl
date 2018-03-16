@@ -311,35 +311,34 @@ function is_adjacent(m:: TMesh, c1 ::Int64, c2::Int64)
 
 
     n = 0
-    c = 0
     v1 = 0
     v2 = 0
+    f = Int64[]
     for i in 1:3 
         if vmin[i] > vmax[i]
             return 0
         elseif vmin[i] == vmax[i]
             n+=1
             if M1[i] == vmin[i]
-                v2 = 3*(i-1)+1
+                v2 = 2*(i-1)+1
                 v1 = v2+1
             elseif M2[i] == vmin[i]
-                v1 = 3*(i-1)+1
+                v1 = 2*(i-1)+1
                 v2 = v1+1
             end
-        elseif m1[i] == vmin[i] && M1[i] == vmax[i] 
-            c += 1
-        elseif m2[i] == vmin[i] && M2[i] == vmax[i]
-            c -= 1
+        else
+            push!(f,i)
         end
     end
 
     if n == 1 
-        if c == 2
+        if m1[f[1]] >= m2[f[1]] && M1[f[1]] <= M2[f[1]] && m1[f[2]] >= m2[f[2]] && M1[f[2]] <= M2[f[2]] 
             return v1
-        elseif c == -2 
+        elseif m2[f[1]] >= m1[f[1]] && M2[f[1]] <= M1[f[1]] && m2[f[2]] >= m1[f[2]] && M1[f[2]] <= M1[f[2]]
+            
             return -v2
         else
-            return 0
+            return 10
         end
     else
         return 0
