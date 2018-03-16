@@ -268,3 +268,80 @@ function split_cell!(m::TMesh, i::Int64, v::Int64)
     return nc
 end
 
+function split_cell(m::TMesh, c::Int64, v::Int64)
+
+    p = Int64[]
+    C = cell(m,c)
+    for k in 1:cell_face_size
+        i0 = C[v,1,k]
+        i1 = C[v,2,k]
+        n  = insert_middle!(m, i0, i1 )
+        push!(p,n)
+    end
+
+    c1 = push_cell!(m, Cell([c for c in C.corners]))
+    c2 = push_cell!(m, Cell([c for c in C.corners]))
+
+    insert_edge!(m, p[1], p[2])
+    insert_edge!(m, p[2], p[4])
+    insert_edge!(m, p[3], p[4])
+    insert_edge!(m, p[1], p[3])
+
+    for k in 1:cell_face_size
+        cell(m,c1)[v,2,k]=p[k]
+        cell(m,c2)[v,1,k]=p[k]
+    end
+    return c1, c2
+end
+
+function is_adjacent(m:: TMesh, c1 ::Int64, c2::Int64)
+
+    m1 = point(m, cell(m,c1)[1]); M1 = point(m, cell(m,c1)[8])
+    m2 = point(m, cell(m,c2)[1]); M2 = point(m, cell(m,c2)[8])
+
+    # println("   ", c1, "  ",c2)
+
+    for i in 1:3 
+        if M1[i] < m2[i] return 0 end
+        if M2[i] < m1[i] return 0 end
+    end
+
+    vmin = [max(m1[i],m2[i]) for i in 1:3]
+    vmax = [min(M1[i],M2[i]) for i in 1:3]
+
+
+    n = 0
+    c = 0
+    v1 = 0
+    v2 = 0
+    for i in 1:3 
+        if vmin[i] > vmax[i]
+            return 0
+        elseif vmin[i] == vmax[i]
+            n+=1
+            if M1[i] == vmin[i]
+                v2 = 3*(i-1)+1
+                v1 = v2+1
+            elseif M2[i] == vmin[i]
+                v1 = 3*(i-1)+1
+                v2 = v1+1
+            end
+        elseif m1[i] == vmin[i] && M1[i] == vmax[i] 
+            c += 1
+        elseif m2[i] == vmin[i] && M2[i] == vmax[i]
+            c -= 1
+        end
+    end
+
+    if n == 1 
+        if c == 2
+            return v1
+        elseif c == -2 
+            return -v2
+        else
+            return 0
+        end
+    else
+        return 0
+    end
+end
