@@ -74,6 +74,16 @@ function split_cell!(m::HLTMesh, c::Int64, v::Int64)
     return nc
 end
 
+function split_cell(m::HLTMesh, c::Int64, v::Int64)
+    np = nbv(m.mesh)
+    c1, c2 = split_cell(m.mesh,c,v)
+    for i in np+1:nbv(m.mesh)
+        s, d = closest(m, point(m,i))
+        push!(m.clst, s )
+    end
+    return c1, c2
+end
+
 function insert_vertex!(m::HLTMesh, p::Vector{Float64},
                         i0::Int64, i1::Int64, v::Int64, s::Int64)
     n = nbv(m)
