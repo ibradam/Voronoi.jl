@@ -105,6 +105,15 @@ function Base.setindex!(c::Cell, j::Int64, v::Int64, s::Int64, k::Int64)
      c.corners[cell_face[v][s][k]]=j
 end
 
+function flat_cell(f::Vector{Int64}, v::Int64)
+    if v==1
+        Cell([f[1],f[1],f[2],f[2],f[3],f[3],f[4],f[4]])
+    elseif v == 2
+        Cell([f[1],f[2],f[1],f[2],f[3],f[4],f[3],f[4]])
+    else 
+        return Cell(cat(1,f,f))
+    end
+end
 ######################################################################
 mutable struct TMesh
     points::Matrix{Float64}

@@ -26,7 +26,7 @@ m = HLTMesh(L,tmesh(P))
 
 #R, S, t = subdivision(m,0.8,0.5,1.)
 R, S, t = subdivision(m,0.7,0.25,0.5)
-#R, S = subdivision(m,0.35)
+#R, S, t = subdivision(m,0.35)
 
 m0 = mesher(m, R, S, t)
 m0[:color]=Color(255,0,0)

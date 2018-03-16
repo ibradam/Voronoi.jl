@@ -83,6 +83,7 @@ function dual_vertex(M, m, n::SbdNode)
         dual_vertex(M, m, n.right)
         dual_edge(M, m, n.left, n.right)
     end
+    
 end
 
 function dual_edge(M, m, n1::SbdNode, n2::SbdNode)
@@ -103,7 +104,7 @@ function dual_edge(M, m, n1::SbdNode, n2::SbdNode)
         return 
     end
 
-    # println("==== ", n1.val, "   ", n2.val)
+    # println("==== ", a, "  ", n1.val, "   ", n2.val)
     push!(M,(n1.val,n2.val, a))
 
 end
