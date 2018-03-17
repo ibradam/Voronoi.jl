@@ -10,7 +10,6 @@ function insert_equidist!(m::HLTMesh, i1::Int64, i2::Int64, v::Int64)
         j = next(m.mesh,i1,v)
     end
     if closest(m,j) == 0
-        # println("   equidist ", j)
         return j
     end
     
@@ -21,12 +20,21 @@ function insert_equidist!(m::HLTMesh, i1::Int64, i2::Int64, v::Int64)
         j = previous(m.mesh,i2,v)
     end
     if closest(m,j) == 0
-        # println("   equidist ", j)
         return j
     end
     
-    pt = (point(m,i1)+point(m,i2))/2
-    #pt = equidist(m.sites[l1], m.sites[l2], point(m,i1), point(m,i2) )
+    #pt = (point(m,i1)+point(m,i2))/2
+    pt = equidist(m.sites[l1], m.sites[l2], point(m,i1), point(m,i2) )
+    if length(pt)==0
+        p1 =  point(m,i1)
+        p2 =  point(m,i2)
+        L1 =   m.sites[l1]
+        L2 =   m.sites[l2]
+        println(">>> problem equidist: \nL1=", L1, "  L2=", L2, "    ",p1, "    ", p2)
+        println("    p1: ", distance2(L1, p1), "  ", distance2(L2, p1) )
+        println("    p2: ", distance2(L1, p2), "  ", distance2(L2, p2) )
+        pt = (point(m,i1)+point(m,i2))/2
+    end
     # println("equidist ", pt, "  ", nbv(m))
     np = insert_vertex!(m, pt, i1, i2, v, 0)
     #println("   equidist ", np, "   ", point(m,np), "   ", closest(m,np) )
@@ -46,7 +54,7 @@ function mesher(m::HLTMesh, R::Vector{Int64}, S::Vector{Int64}, t::SbdTree)
     Ctr = Dict{Int64,Int64}()
     # Graph of point connections, 
     
-    for c in R
+    for c in cat(1,R,S)
         C = cell(m,c)
         # println(C)
         Pts[c] = Int64[]
@@ -83,13 +91,13 @@ function mesher(m::HLTMesh, R::Vector{Int64}, S::Vector{Int64}, t::SbdTree)
     end
 
 
-    # Adjacent faces
-    
+    # Interior faces
     L = Tuple{Int64,Int64,Int64}[]
     dual_vertex(L, m.mesh, t.root)
 
     # println("L: ", length(L))
-    
+
+    # Boundary faces    
     for v in 1:3
         for s in 1:2
             C = flat_cell(cell_face[v][s],v)
@@ -106,9 +114,9 @@ function mesher(m::HLTMesh, R::Vector{Int64}, S::Vector{Int64}, t::SbdTree)
         if getkey(Ctr, l[1], 0) !=0  && getkey(Ctr, l[2], 0) != 0 
             a = l[3]
             # println(" a: ", a)
-            if Ctr[l[1]]>0 && Ctr[l[2]] >0
-                push_edge!(M, [ Ctr[l[1]], Ctr[l[2]] ])
-            end
+            # if Ctr[l[1]]>0 && Ctr[l[2]] >0
+            #     push_edge!(M, [ Ctr[l[1]], Ctr[l[2]] ])
+            # end
             if a > 6
                 println(" a: ", a)
                 continue
@@ -138,8 +146,10 @@ function mesher(m::HLTMesh, R::Vector{Int64}, S::Vector{Int64}, t::SbdTree)
                 nv = nbv(M)
                 for p in S
                     push_face!(M, [ Ctr[c1], nv, p])
+                    push_edge!(M, [ Ctr[c1], nv] )
                     if Ctr[c2] >0
                         push_face!(M, [ Ctr[c2], nv, p])
+                        push_edge!(M, [ Ctr[c2], nv] )
                     end
                 end
             end

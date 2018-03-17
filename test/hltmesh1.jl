@@ -25,8 +25,9 @@ closest(L, [0.25,0.25,0.1])
 m = HLTMesh(L,tmesh(P))
 
 #R, S, t = subdivision(m,0.8,0.5,1.)
-R, S, t = subdivision(m,0.7,0.25,0.5)
-#R, S, t = subdivision(m,0.5,0.25)
+#R, S, t = subdivision(m,0.7,0.25,0.5)
+R, S, t = subdivision(m,0.5,0.25)
+#R, S, t = subdivision(m,0.25,0.15)
 #R, S, t = subdivision(m,0.15)
 
 m0 = mesher(m, R, S, t)
