@@ -30,7 +30,6 @@ function cell(m::HLTMesh, c::Int64)  return cell(m.mesh,c)  end
 
 function Base.size(m::HLTMesh, c::Int64)  return size(m.mesh,c)  end
 
-
 function closest(L::Vector{HLine}, p:: Vector{Float64})
     d0 =  Inf
     s  = 0
@@ -117,6 +116,23 @@ function regularity(m::HLTMesh, c::Int64)
 
     C = cell(m,c)
 
+    #=
+    for v in 1:3
+        for s in 1:4
+            e = cell_edge[v][s]
+            l1 = m.clst[C[e[1]]]
+            l2 = m.clst[C[e[2]]]
+            p1 = point(m,C[e[1]])
+            p2 = point(m,C[e[2]])
+            p = (p1+p2)/2.0
+            l = closest(m.sites, p)
+            if l1 == l2  && l != l1
+                return BOUNDARY_CURVE
+            end
+        end
+    end
+    =#
+    
     Clst = Set(Int64[])
     for i in 1:8
          push!(Clst, m.clst[C[i]])

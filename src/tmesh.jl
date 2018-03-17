@@ -2,6 +2,7 @@ using SemiAlgebraicTypes
 
 import SemiAlgebraicTypes: nbv, push_vertex!, push_edge!, push_face!
 
+#=
 mutable struct Vertex
 
     m_index::Int64
@@ -36,6 +37,7 @@ end
 function Base.setindex!(v::Vertex, n::Int64, i::Int64)
     v.m_neighbor[i]=n
 end
+=#
 
 function dir(p1::Vector{Float64}, p2::Vector{Float64})
     if !isapprox(p1[1],p2[1])
@@ -46,6 +48,7 @@ function dir(p1::Vector{Float64}, p2::Vector{Float64})
         return 3
     end
 end
+
 
 ######################################################################
 #    v=3           v=2
@@ -117,11 +120,11 @@ end
 ######################################################################
 mutable struct TMesh
     points::Matrix{Float64}
-    vertices::Vector{Vertex}
+    vertices::Matrix{Int64}
     cells::Vector{Cell}
 
     function TMesh()
-        new(Matrix{Float64}(3,0),Vertex[],Cell[])
+        new(Matrix{Float64}(3,0),Matrix{Int64}(6,0),Cell[])
     end
 end
 
@@ -143,7 +146,7 @@ function tmesh(P::Vector{Vector{Float64}})
 end
 
 function SemiAlgebraicTypes.nbv(m::TMesh)
-    return length(m.vertices)
+    return size(m.vertices,2)
 end
 
 function nbc(m::TMesh)
@@ -152,8 +155,16 @@ end
 
 function SemiAlgebraicTypes.push_vertex!(m::TMesh, p::Vector{Float64})
     m.points = hcat(m.points, p)
-    push!(m.vertices, Vertex())
-    return length(m.vertices)
+    m.vertices = hcat(m.vertices, fill(0,6))
+    return size(m.vertices,2)
+end
+
+function Base.next(m::TMesh, i::Int64, v::Int64)
+    return m.vertices[2*v,i]
+end
+
+function previous(m::TMesh, i::Int64, v::Int64)
+    return m.vertices[2*v-1,i]
 end
 
 function push_cell!(m::TMesh, C::Cell)
@@ -165,8 +176,13 @@ function point(m::TMesh, i::Int64)
     return m.points[:,i]
 end
 
+function point(m::TMesh, i::Int64, v::Int64)
+    return m.points[v,i]
+end
+
+
 function vertex(m::TMesh, i::Int64)
-    return m.vertices[i]
+    return m.vertices[:,i]
 end
 
 function cell(m::TMesh, i::Int64)
@@ -211,30 +227,77 @@ function find_vertex(m::TMesh, p::Vector, i0::Int64, i1::Int64, v)
     return 0
 end
 
-# Insert point between two adjacent vertices.
+function check(m, i1::Int64, i2::Int64, v::Int64)
+    print(" l ", i1, " ", i2, " ::  ")
+    j = i1
+    while j != i2 && j !=0
+        print(j, " - ", vertex(m,j), "    ")
+        j = next(m,j,v)
+    end
+    
+    if j != 0
+        println(j, " - ", vertex(m,j))
+    else
+        println(j, " / ")
+    end
+
+    print(" l ", i1, " ", i2, " ::  ")
+    j = i2
+    while j != i1 && j !=0
+        print(j, " - ", vertex(m,j), "    ")
+        j = previous(m,j,v)
+    end
+    if j != 0
+        println(j, " - ", vertex(m,j))
+    else
+        println(j, " / ")
+    end
+end
+
+# Insert point between two vertices.
 function insert_vertex!(m::TMesh, p::Vector{Float64},
                         i0::Int64, i1::Int64, v::Int64)
+    #println("tmesh::insert_vertex ", v, "  ", i0, " ", i1, "   ", vertex(m,i0), "  ", vertex(m,i1))
+    #a = i0; b = i1;
 
     #println("tmesh::insert_vertex")
-    if isapprox(p[v],point(m,i0)[v])
+    j = i0
+    while p[v] >= point(m,j,v) && j != i1
+        i0 = j
+        j = next(m,j,v)
+        # println("  i0 ", i0,"  ",j, "  ", v)
+    end
+
+    j = i1
+    while p[v] <= point(m,j,v) && j != i0
+        i1 = j
+        j = previous(m,j,v)
+        # println("  i1 ", i1,"  ",j,"  ",v)
+    end
+
+    if isapprox(p[v],point(m,i0,v))
+        #println("tmesh::insert_vertI0 ", i0, " ", i1, " -> ", i0, "    ", vertex(m,i0), " ", point(m,i0))
         return i0
-    elseif isapprox(p[v],point(m,i1)[v])
+    elseif isapprox(p[v],point(m,i1,v))
+        #println("tmesh::insert_vertI1 ", i0, " ", i1, " -> ", i1, "    ", vertex(m,i1), " ", point(m,i1))
+        
         return i1
     else
         n = push_vertex!(m, p)
+        m.vertices[2*v,i0]   = n
+        m.vertices[2*v-1,n]  = i0
+        m.vertices[2*v,n]    = i1
+        m.vertices[2*v-1,i1] = n
+        #println("tmesh::insert_vertex ", i0, " ", i1, " -> ", n, "   ", vertex(m,n), " ", vertex(m,i0), "  ", vertex(m,i1))
 
-        m.vertices[i0][2*v]   = n
-        m.vertices[n][2*v-1]  = i0
-        m.vertices[n][2*v]    = i1
-        m.vertices[i1][2*v-1] = n
+        #check(m,a,b,v)
         return n
     end
 end
 
-function insert_middle!(m::TMesh, i0::Int64, i1::Int64)
+function insert_middle!(m::TMesh, i0::Int64, i1::Int64, v::Int64)
     p0 = point(m,i0)
     p1 = point(m,i1)
-    v  = dir(p0,p1)
     p  = (p0 + p1)/2.0
 
     return insert_vertex!(m, p, i0, i1, v)
@@ -242,14 +305,21 @@ function insert_middle!(m::TMesh, i0::Int64, i1::Int64)
 end
 
 function insert_edge!(m, i0::Int64, i1::Int64, v::Int64)
-    m.vertices[i0][2*v]  = i1
-    m.vertices[i1][2*v-1]= i0
+    m.vertices[2*v,i0]  = i1
+    m.vertices[2*v-1,i1]= i0
 end
 
 function insert_edge!(m, i0::Int64, i1::Int64)
+
     v = dir(point(m,i0), point(m,i1))
-    m.vertices[i0][2*v]  = i1
-    m.vertices[i1][2*v-1]= i0
+    #println("insert_edge ", i0, "  ", i1, "  ",v )
+
+    if   m.vertices[2*v,i0] == 0
+        m.vertices[2*v,i0]  = i1
+    end
+    if m.vertices[2*v-1,i1] == 0
+        m.vertices[2*v-1,i1] = i0
+    end
 end
 
 function split_cell!(m::TMesh, i::Int64, v::Int64)
@@ -259,16 +329,16 @@ function split_cell!(m::TMesh, i::Int64, v::Int64)
     for k in 1:cell_face_size
         i0 = C[v,1,k]
         i1 = C[v,2,k]
-        n  = insert_middle!(m, i0, i1 )
+        n  = insert_middle!(m, i0, i1, v)
         push!(p,n)
     end
-
-    nc = push_cell!(m, Cell([c for c in C.corners]))
 
     insert_edge!(m, p[1], p[2])
     insert_edge!(m, p[2], p[4])
     insert_edge!(m, p[3], p[4])
     insert_edge!(m, p[1], p[3])
+
+    nc = push_cell!(m, Cell([c for c in C.corners]))
 
     for k in 1:cell_face_size
         cell(m,i)[v,2,k]=p[k]
@@ -278,28 +348,30 @@ function split_cell!(m::TMesh, i::Int64, v::Int64)
 end
 
 function split_cell(m::TMesh, c::Int64, v::Int64)
+    #println("split ", c, "  ", v, "   ", cell(m,c))
 
     p = Int64[]
     C = cell(m,c)
     for k in 1:cell_face_size
         i0 = C[v,1,k]
         i1 = C[v,2,k]
-        n  = insert_middle!(m, i0, i1 )
+        n  = insert_middle!(m, i0, i1, v)
         push!(p,n)
     end
-
-    c1 = push_cell!(m, Cell([c for c in C.corners]))
-    c2 = push_cell!(m, Cell([c for c in C.corners]))
 
     insert_edge!(m, p[1], p[2])
     insert_edge!(m, p[2], p[4])
     insert_edge!(m, p[3], p[4])
     insert_edge!(m, p[1], p[3])
+    
+    c1 = push_cell!(m, Cell([c for c in C.corners]))
+    c2 = push_cell!(m, Cell([c for c in C.corners]))
 
     for k in 1:cell_face_size
         cell(m,c1)[v,2,k]=p[k]
         cell(m,c2)[v,1,k]=p[k]
     end
+
     return c1, c2
 end
 

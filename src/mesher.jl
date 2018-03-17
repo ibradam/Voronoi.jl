@@ -1,24 +1,37 @@
 # Insert in m the point of the medial axis between i1 and i2
 function insert_equidist!(m::HLTMesh, i1::Int64, i2::Int64, v::Int64)
+
+    #check(m.mesh,i1,i2,v)
+
     l1 = closest(m,i1)
-    i = i1
-    j = next(vertex(m,i1),v)
-    
-    while closest(m,j) == l1 && i !=0 && j !=0  
-        i = j
-        j = next(vertex(m,i),v)
+    j = next(m.mesh,i1,v)    
+    while closest(m,j) == l1 && i1 !=0 && j !=0  && j != i2
+        i1 = j
+        j = next(m.mesh,i1,v)
     end
-    
     if closest(m,j) == 0
+        # println("   equidist ", j)
         return j
-    else
-        pt = (point(m,i)+point(m,j))/2
-        # pt = equidist(m.sites[closest(m,i)], m.sites[closest(m,j)], point(m,i), point(m,j) )
-        # println("equidist ", pt, "  ", nbv(m))
-        np = insert_vertex!(m, pt, i, j, v, 0)
-        #println("equidist ", np, "   ", point(m,np), "   ", closest(m,np) )
-        return np
     end
+    
+    l2 = closest(m,i2)
+    j  = previous(m.mesh,i2,v)
+    while closest(m,j) == l2 && i2 !=0 && j !=0  && j != i1
+        i2 = j
+        j = previous(m.mesh,i2,v)
+    end
+    if closest(m,j) == 0
+        # println("   equidist ", j)
+        return j
+    end
+    
+    pt = (point(m,i1)+point(m,i2))/2
+    #pt = equidist(m.sites[l1], m.sites[l2], point(m,i1), point(m,i2) )
+    # println("equidist ", pt, "  ", nbv(m))
+    np = insert_vertex!(m, pt, i1, i2, v, 0)
+    #println("   equidist ", np, "   ", point(m,np), "   ", closest(m,np) )
+    return np
+
 end
 
 function mesher(m::HLTMesh, R::Vector{Int64}, S::Vector{Int64}, t::SbdTree)
@@ -69,6 +82,7 @@ function mesher(m::HLTMesh, R::Vector{Int64}, S::Vector{Int64}, t::SbdTree)
         Ctr[c] = nbv(M)
     end
 
+
     # Adjacent faces
     
     L = Tuple{Int64,Int64,Int64}[]
@@ -92,9 +106,11 @@ function mesher(m::HLTMesh, R::Vector{Int64}, S::Vector{Int64}, t::SbdTree)
         if getkey(Ctr, l[1], 0) !=0  && getkey(Ctr, l[2], 0) != 0 
             a = l[3]
             # println(" a: ", a)
+            if Ctr[l[1]]>0 && Ctr[l[2]] >0
+                push_edge!(M, [ Ctr[l[1]], Ctr[l[2]] ])
+            end
             if a > 6
                 println(" a: ", a)
-                push_edge!(M, [ Ctr[l[1]], Ctr[l[2]] ])
                 continue
             elseif a > 0
                 c1 = l[1]

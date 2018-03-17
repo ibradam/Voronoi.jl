@@ -24,7 +24,7 @@ function split!(nd, m, L)
 
     # Index of the new cell 
     c1, c2 = split_cell(m,c,v)
-    
+
     push!(L, SbdNode(c1))
     push!(L, SbdNode(c2))
     nd.left  = L[end-1]
@@ -32,7 +32,7 @@ function split!(nd, m, L)
     nd.dir   = v
 end
 
-function subdivision(m::HLTMesh, msf::Float64 = 0.2 , mcr::Float64 = msf/3, mpt = msf/10)
+function subdivision(m::HLTMesh, msf::Float64 = 0.2 , mcr::Float64 = msf/2, mpt = msf/2)
 
     t = SbdTree(1)
     L = [t.root]
