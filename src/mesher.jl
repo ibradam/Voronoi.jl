@@ -5,7 +5,7 @@ function insert_equidist!(m::HLTMesh, i1::Int64, i2::Int64, v::Int64)
 
     l1 = closest(m,i1)
     j = next(m.mesh,i1,v)    
-    while closest(m,j) == l1 && i1 !=0 && j !=0  && j != i2
+    while j !=0 && closest(m,j) == l1 && i1 !=0  && j != i2
         i1 = j
         j = next(m.mesh,i1,v)
     end
@@ -15,7 +15,7 @@ function insert_equidist!(m::HLTMesh, i1::Int64, i2::Int64, v::Int64)
     
     l2 = closest(m,i2)
     j  = previous(m.mesh,i2,v)
-    while closest(m,j) == l2 && i2 !=0 && j !=0  && j != i1
+    while j != 0 && closest(m,j) == l2 && i2 !=0  && j != i1
         i2 = j
         j = previous(m.mesh,i2,v)
     end
@@ -157,4 +157,12 @@ function mesher(m::HLTMesh, R::Vector{Int64}, S::Vector{Int64}, t::SbdTree)
     end
 
     return M
+end
+
+
+function voronoi(m::HLTMesh, eps1::Float64= 0.2 , eps2::Float64 = eps1/2, eps3 = eps2/2)
+
+    R,S,t = subdivision(m,eps1,eps2,eps3)
+
+    return mesher(m, R,S,t)
 end

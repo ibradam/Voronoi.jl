@@ -2,55 +2,8 @@ using SemiAlgebraicTypes
 
 import SemiAlgebraicTypes: nbv, push_vertex!, push_edge!, push_face!
 
-#=
-mutable struct Vertex
-
-    m_index::Int64
-    m_neighbor::Vector{Int64}
-    # The index of the point
-    m_id::Int64
-    # The tag of the point
-    m_tag::Int64
-
-    function Vertex()
-        new(0, [0,0,0,0,0,0], 0, 0)
-    end
-
-    function Vertex(i::Int64)
-        new(i, [0,0,0,0,0,0], 0, 0)
-    end
-end
-
-function Base.next(v::Vertex, x::Int64)
-    return v.m_neighbor[2*x]
-end
-
-function previous(v::Vertex, x::Int64)
-    return v.m_neighbor[2*x-1]
-end
-
-function Base.getindex(v::Vertex, i::Int64)
-    return v.m_neighbor[i]
-end
-
-
-function Base.setindex!(v::Vertex, n::Int64, i::Int64)
-    v.m_neighbor[i]=n
-end
-=#
-
-function dir(p1::Vector{Float64}, p2::Vector{Float64})
-    if !isapprox(p1[1],p2[1])
-        return 1
-    elseif !isapprox(p1[2],p2[2])
-        return 2
-    else
-        return 3
-    end
-end
-
-
 ######################################################################
+#
 #    v=3           v=2
 #     |            /
 #     |           /
@@ -66,7 +19,7 @@ end
 #     |/          |/
 #     1 ----1---- 2 --------- v = 1
 #
-
+######################################################################
 cell_edge = [
     [ [1,2], [3,4], [5,6], [7,8] ],
     [ [1,3], [2,4], [5,7], [6,8] ],
@@ -117,14 +70,26 @@ function flat_cell(f::Vector{Int64}, v::Int64)
         return Cell(cat(1,f,f))
     end
 end
+
+function dir(p1::Vector{Float64}, p2::Vector{Float64})
+    #println("dir  ",p1, "  ", p2)
+    if !isapprox(p1[1],p2[1])
+        return 1
+    elseif !isapprox(p1[2],p2[2])
+        return 2
+    else
+        return 3
+    end
+end
+
 ######################################################################
 mutable struct TMesh
-    points::Matrix{Float64}
-    vertices::Matrix{Int64}
+    points::Vector{Vector{Float64}}
+    vertices::Vector{Vector{Int64}}
     cells::Vector{Cell}
 
     function TMesh()
-        new(Matrix{Float64}(3,0),Matrix{Int64}(6,0),Cell[])
+        new(Vector{Float64}[],Vector{Int64}[],Cell[])
     end
 end
 
@@ -145,8 +110,31 @@ function tmesh(P::Vector{Vector{Float64}})
     return m
 end
 
+function tmesh(p::Vector{Float64}, P::Vector{Float64})
+    m = TMesh()
+
+    push_vertex!(m,p)
+    push_vertex!(m,[P[1],p[2],p[3]])
+    push_vertex!(m,[p[1],P[2],p[3]])
+    push_vertex!(m,[P[1],P[2],p[3]])
+    push_vertex!(m,[p[1],p[2],P[3]])
+    push_vertex!(m,[P[1],p[2],P[3]])
+    push_vertex!(m,[p[1],P[2],P[3]])
+    push_vertex!(m,P)
+
+    push!(m.cells, Cell([i for i in 1:8]))
+
+    for v in 1:3
+        for k in 1:cell_face_size
+            insert_edge!(m, cell_face[v][1][k], cell_face[v][2][k], v);
+        end
+    end
+
+    return m
+end
+
 function SemiAlgebraicTypes.nbv(m::TMesh)
-    return size(m.vertices,2)
+    return length(m.points)
 end
 
 function nbc(m::TMesh)
@@ -154,17 +142,17 @@ function nbc(m::TMesh)
 end
 
 function SemiAlgebraicTypes.push_vertex!(m::TMesh, p::Vector{Float64})
-    m.points = hcat(m.points, p)
-    m.vertices = hcat(m.vertices, fill(0,6))
-    return size(m.vertices,2)
+    m.points = push!(m.points, p)
+    m.vertices = push!(m.vertices, fill(0,6))
+    return size(m.vertices,1)
 end
 
 function Base.next(m::TMesh, i::Int64, v::Int64)
-    return m.vertices[2*v,i]
+    return m.vertices[i][2*v]
 end
 
 function previous(m::TMesh, i::Int64, v::Int64)
-    return m.vertices[2*v-1,i]
+    return m.vertices[i][2*v-1]
 end
 
 function push_cell!(m::TMesh, C::Cell)
@@ -173,16 +161,16 @@ function push_cell!(m::TMesh, C::Cell)
 end
 
 function point(m::TMesh, i::Int64)
-    return m.points[:,i]
+    return m.points[i]
 end
 
 function point(m::TMesh, i::Int64, v::Int64)
-    return m.points[v,i]
+    return m.points[i][v]
 end
 
 
 function vertex(m::TMesh, i::Int64)
-    return m.vertices[:,i]
+    return m.vertices[i]
 end
 
 function cell(m::TMesh, i::Int64)
@@ -203,7 +191,7 @@ function split_direction(m::TMesh, c::Int64)
     v  = 0
     for i in 1:3
         d = abs(p1[i]-p2[i])
-        if d > d0
+        if d > d0+1.e-6
             d0 = d
             v  = i
         end
@@ -259,17 +247,18 @@ function insert_vertex!(m::TMesh, p::Vector{Float64},
                         i0::Int64, i1::Int64, v::Int64)
     #println("tmesh::insert_vertex ", v, "  ", i0, " ", i1, "   ", vertex(m,i0), "  ", vertex(m,i1))
     #a = i0; b = i1;
-
+    #check(m,i0,i1,v)
+    
     #println("tmesh::insert_vertex")
     j = i0
-    while p[v] >= point(m,j,v) && j != i1
+    while j!=0 && p[v] >= point(m,j,v) && j != i1 
         i0 = j
         j = next(m,j,v)
-        # println("  i0 ", i0,"  ",j, "  ", v)
+        #println("  i0 ", i0,"  ",j, "  ", v)
     end
 
     j = i1
-    while p[v] <= point(m,j,v) && j != i0
+    while j!=0 && p[v] <= point(m,j,v) && j != i0
         i1 = j
         j = previous(m,j,v)
         # println("  i1 ", i1,"  ",j,"  ",v)
@@ -284,13 +273,12 @@ function insert_vertex!(m::TMesh, p::Vector{Float64},
         return i1
     else
         n = push_vertex!(m, p)
-        m.vertices[2*v,i0]   = n
-        m.vertices[2*v-1,n]  = i0
-        m.vertices[2*v,n]    = i1
-        m.vertices[2*v-1,i1] = n
+        m.vertices[i0][2*v]   = n
+        m.vertices[n][2*v-1]  = i0
+        m.vertices[n][2*v]    = i1
+        m.vertices[i1][2*v-1] = n
         #println("tmesh::insert_vertex ", i0, " ", i1, " -> ", n, "   ", vertex(m,n), " ", vertex(m,i0), "  ", vertex(m,i1))
 
-        #check(m,a,b,v)
         return n
     end
 end
@@ -304,22 +292,26 @@ function insert_middle!(m::TMesh, i0::Int64, i1::Int64, v::Int64)
         
 end
 
+function insert_middle!(m::TMesh, i0::Int64, i1::Int64)
+    v = dir(point(m,i0), point(m,i1))
+    return insert_middle!(m, i0, i1, v)
+end
+
 function insert_edge!(m, i0::Int64, i1::Int64, v::Int64)
-    m.vertices[2*v,i0]  = i1
-    m.vertices[2*v-1,i1]= i0
+    #println(">>> insert_edge  ", i0, "  ", i1, "  ",v, "   ", vertex(m,i0), "  ",vertex(m,i1))
+    if   m.vertices[i0][2*v] == 0
+        m.vertices[i0][2*v]  = i1
+    end
+    if m.vertices[i1][2*v-1] == 0
+        m.vertices[i1][2*v-1] = i0
+    end
+    #println("<<< insert_edge  ", i0, "  ", i1, "  ",v, "   ", vertex(m,i0), "  ",vertex(m,i1))
 end
 
 function insert_edge!(m, i0::Int64, i1::Int64)
 
     v = dir(point(m,i0), point(m,i1))
-    #println("insert_edge ", i0, "  ", i1, "  ",v )
-
-    if   m.vertices[2*v,i0] == 0
-        m.vertices[2*v,i0]  = i1
-    end
-    if m.vertices[2*v-1,i1] == 0
-        m.vertices[2*v-1,i1] = i0
-    end
+    insert_edge!(m,i0,i1,v)
 end
 
 function split_cell!(m::TMesh, i::Int64, v::Int64)
@@ -371,7 +363,7 @@ function split_cell(m::TMesh, c::Int64, v::Int64)
         cell(m,c1)[v,2,k]=p[k]
         cell(m,c2)[v,1,k]=p[k]
     end
-
+    #println("split done ", c, "  ", v, "   ", cell(m,c))
     return c1, c2
 end
 

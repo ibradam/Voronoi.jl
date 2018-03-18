@@ -23,7 +23,7 @@ function Axel.axlprint(io::IO, m::TMesh, idt::Int64=0 )
 
     axlprint(io,"<points>\n",idt)
     for i in 1:nbv(m)
-        print(io, m.points[:,i], idt+2)
+        print(io, point(m,i), idt+2)
         print(io,"\n")
     end
     axlprint(io, "</points>\n", idt)   
