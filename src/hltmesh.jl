@@ -68,7 +68,7 @@ function split_cell!(m::HLTMesh, c::Int64, v::Int64)
     for i in np+1:nbv(m.mesh)
         s, d = closest(m, point(m,i))
         push!(m.clst, s )
-    #     push!(m.dist, d )
+        #  push!(m.dist, d )
     end
     return nc
 end

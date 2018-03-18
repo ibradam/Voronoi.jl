@@ -28,8 +28,8 @@ function insert_equidist!(m::HLTMesh, i1::Int64, i2::Int64, v::Int64)
     if length(pt)==0
         p1 =  point(m,i1)
         p2 =  point(m,i2)
-        L1 =   m.sites[l1]
-        L2 =   m.sites[l2]
+        L1 =  m.sites[l1]
+        L2 =  m.sites[l2]
         println(">>> problem equidist: \nL1=", L1, "  L2=", L2, "    ",p1, "    ", p2)
         println("    p1: ", distance2(L1, p1), "  ", distance2(L2, p1) )
         println("    p2: ", distance2(L1, p2), "  ", distance2(L2, p2) )
@@ -42,7 +42,7 @@ function insert_equidist!(m::HLTMesh, i1::Int64, i2::Int64, v::Int64)
 
 end
 
-function mesher(m::HLTMesh, R::Vector{Int64}, S::Vector{Int64}, t::SbdTree)
+function mesher(m::HLTMesh, R::Vector{Int64}, S::Vector{Int64})
 
     # Output mesh
     M = mesh(Float64)
@@ -93,7 +93,7 @@ function mesher(m::HLTMesh, R::Vector{Int64}, S::Vector{Int64}, t::SbdTree)
 
     # Interior faces
     L = Tuple{Int64,Int64,Int64}[]
-    dual_vertex(L, m.mesh, t.root)
+    dual_vertex(L, m.mesh, 1)
 
     # println("L: ", length(L))
 
@@ -104,7 +104,7 @@ function mesher(m::HLTMesh, R::Vector{Int64}, S::Vector{Int64}, t::SbdTree)
             c = push_cell!(m.mesh, C)
             nd = SbdNode(c)
             Ctr[c] = -1
-            dual_edge(L, m.mesh, t.root, nd)
+            dual_edge(L, m.mesh, 1, c)
             # println("L: ", length(L))
         end
     end
@@ -162,7 +162,7 @@ end
 
 function voronoi(m::HLTMesh, eps1::Float64= 0.2 , eps2::Float64 = eps1/2, eps3 = eps2/2)
 
-    R,S,t = subdivision(m,eps1,eps2,eps3)
+    R,S = subdivision(m,eps1,eps2,eps3)
 
-    return mesher(m, R,S,t)
+    return mesher(m, R,S)
 end

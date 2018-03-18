@@ -1,23 +1,5 @@
-mutable struct SbdNode
-    val:: Int64
-    dir:: Int64
-    left:: Any
-    right:: Any
 
-    function SbdNode(i::Int64) new(i,0,0,0) end
-
-end
-
-
-mutable struct SbdTree
-    root :: SbdNode
-
-    function SbdTree(i::Int64) new(SbdNode(i)) end
-end
-
-
-function split!(nd, m, L)
-    c = nd.val
+function split!(c, m, L)
     
     # Direction of the split
     v  = split_direction(m.mesh,c)
@@ -25,17 +7,14 @@ function split!(nd, m, L)
     # Index of the new cell 
     c1, c2 = split_cell(m,c,v)
 
-    push!(L, SbdNode(c1))
-    push!(L, SbdNode(c2))
-    nd.left  = L[end-1]
-    nd.right = L[end]
-    nd.dir   = v
+    push!(L, c1)
+    push!(L, c2)
+
 end
 
 function subdivision(m::HLTMesh, msf::Float64 = 0.2 , mcr::Float64 = msf/2, mpt = msf/2)
 
-    t = SbdTree(1)
-    L = [t.root]
+    L = [1]
 
     sz = size(m,1)
     szsf = sz*msf
@@ -47,23 +26,22 @@ function subdivision(m::HLTMesh, msf::Float64 = 0.2 , mcr::Float64 = msf/2, mpt 
 
     while !isempty(L) 
 
-        nd = pop!(L)
-        c  = nd.val
+        c = pop!(L)
         r  = regularity(m,c)
         if r != OUTSIDE
 
             if size(m,c) > szsf
-                split!(nd, m, L)
+                split!(c, m, L)
             elseif r == BOUNDARY 
                 push!(R,c)
             elseif r == BOUNDARY_CURVE
                 if size(m,c) > szcr
-                    split!(nd, m, L)
+                    split!(c, m, L)
                 else
                     push!(R, c)
                 end
             elseif size(m,c) > szpt
-                split!(nd, m, L)
+                split!(c, m, L)
             else 
                 push!(S, c)
             end
@@ -71,40 +49,38 @@ function subdivision(m::HLTMesh, msf::Float64 = 0.2 , mcr::Float64 = msf/2, mpt 
         end
     end
 
-    R, S, t
+    R, S
 end
 
-function is_leaf(n:: SbdNode) return n.left==0 end
-    
-function dual_vertex(M, m, n::SbdNode)
+function dual_vertex(M, m, c::Int64)
 
-    if !is_leaf(n)
-        dual_vertex(M, m, n.left)
-        dual_vertex(M, m, n.right)
-        dual_edge(M, m, n.left, n.right)
+    if !is_leaf(cell(m,c))
+        dual_vertex(M, m, cell(m,c).left)
+        dual_vertex(M, m, cell(m,c).right)
+        dual_edge(M, m, cell(m,c).left, cell(m,c).right)
     end
     
 end
 
-function dual_edge(M, m, n1::SbdNode, n2::SbdNode)
+function dual_edge(M, m, c1::Int64, c2::Int64)
 
-    a = is_adjacent(m,n1.val,n2.val)
+    a = is_adjacent(m,c1,c2)
 
     if a == 0 return end
 
-    if n1.left != 0
-        dual_edge(M, m, n1.left , n2)
-        dual_edge(M, m, n1.right, n2)
+    if !is_leaf(m,c1)
+        dual_edge(M, m, cell(m,c1).left , c2)
+        dual_edge(M, m, cell(m,c1).right, c2)
         return 
     end
 
-    if n2.left != 0
-        dual_edge(M, m, n1, n2.left)
-        dual_edge(M, m, n1, n2.right)
+    if !is_leaf(m,c2)
+        dual_edge(M, m, c1, cell(m,c2).left)
+        dual_edge(M, m, c1, cell(m,c2).right)
         return 
     end
 
     # println("==== ", a, "  ", n1.val, "   ", n2.val)
-    push!(M,(n1.val,n2.val, a))
+    push!(M,(c1,c2, a))
 
 end

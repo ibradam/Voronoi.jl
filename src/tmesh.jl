@@ -42,9 +42,12 @@ cell_face_edge_idx = [
 
 mutable struct Cell
     corners::Vector{Int64}
+    left::Any
+    right::Any
+    dir::Int64
     
     function Cell(C::Vector{Int64})
-        new(C)
+        new(C,0,0,0)
     end
 end
 
@@ -83,31 +86,33 @@ function dir(p1::Vector{Float64}, p2::Vector{Float64})
 end
 
 ######################################################################
+mutable struct SbdNode
+    val:: Int64
+    dir:: Int64
+    left:: Any
+    right:: Any
+
+    function SbdNode(i::Int64) new(i,0,0,0) end
+
+end
+
+
+mutable struct SbdTree
+    root :: SbdNode
+
+    function SbdTree(i::Int64=0) new(SbdNode(i)) end
+    
+end
+function is_leaf(c:: SbdNode) return c.left==0 && c.right == 0 end
+######################################################################
 mutable struct TMesh
     points::Vector{Vector{Float64}}
     vertices::Vector{Vector{Int64}}
     cells::Vector{Cell}
-
+    
     function TMesh()
         new(Vector{Float64}[],Vector{Int64}[],Cell[])
     end
-end
-
-function tmesh(P::Vector{Vector{Float64}})
-    m = TMesh()
-    for p in P
-        push_vertex!(m,p)
-    end
-
-    push!(m.cells, Cell([i for i in 1:8]))
-
-    for v in 1:3
-        for k in 1:cell_face_size
-            insert_edge!(m, cell_face[v][1][k], cell_face[v][2][k], v);
-        end
-    end
-
-    return m
 end
 
 function tmesh(p::Vector{Float64}, P::Vector{Float64})
@@ -129,7 +134,7 @@ function tmesh(p::Vector{Float64}, P::Vector{Float64})
             insert_edge!(m, cell_face[v][1][k], cell_face[v][2][k], v);
         end
     end
-
+    
     return m
 end
 
@@ -314,30 +319,30 @@ function insert_edge!(m, i0::Int64, i1::Int64)
     insert_edge!(m,i0,i1,v)
 end
 
-function split_cell!(m::TMesh, i::Int64, v::Int64)
+# function split_cell!(m::TMesh, i::Int64, v::Int64)
 
-    p = Int64[]
-    C = cell(m,i)
-    for k in 1:cell_face_size
-        i0 = C[v,1,k]
-        i1 = C[v,2,k]
-        n  = insert_middle!(m, i0, i1, v)
-        push!(p,n)
-    end
+#     p = Int64[]
+#     C = cell(m,i)
+#     for k in 1:cell_face_size
+#         i0 = C[v,1,k]
+#         i1 = C[v,2,k]
+#         n  = insert_middle!(m, i0, i1, v)
+#         push!(p,n)
+#     end
 
-    insert_edge!(m, p[1], p[2])
-    insert_edge!(m, p[2], p[4])
-    insert_edge!(m, p[3], p[4])
-    insert_edge!(m, p[1], p[3])
+#     insert_edge!(m, p[1], p[2])
+#     insert_edge!(m, p[2], p[4])
+#     insert_edge!(m, p[3], p[4])
+#     insert_edge!(m, p[1], p[3])
 
-    nc = push_cell!(m, Cell([c for c in C.corners]))
+#     nc = push_cell!(m, Cell([c for c in C.corners]))
 
-    for k in 1:cell_face_size
-        cell(m,i)[v,2,k]=p[k]
-        cell(m,nc)[v,1,k]=p[k]
-    end
-    return nc
-end
+#     for k in 1:cell_face_size
+#         cell(m,i)[v,2,k]=p[k]
+#         cell(m,nc)[v,1,k]=p[k]
+#     end
+#     return nc
+# end
 
 function split_cell(m::TMesh, c::Int64, v::Int64)
     #println("split ", c, "  ", v, "   ", cell(m,c))
@@ -363,8 +368,19 @@ function split_cell(m::TMesh, c::Int64, v::Int64)
         cell(m,c1)[v,2,k]=p[k]
         cell(m,c2)[v,1,k]=p[k]
     end
+
+    m.cells[c].left =c1
+    m.cells[c].right=c2
+    m.cells[c].dir  =v
+    
     #println("split done ", c, "  ", v, "   ", cell(m,c))
     return c1, c2
+end
+
+function is_leaf(c:: Cell) return c.left==0 && c.right == 0 end
+
+function is_leaf(m::TMesh, c::Int64)
+    return m.cells[c].left == 0 && m.cells[c].right == 0
 end
 
 function is_adjacent(m:: TMesh, c1 ::Int64, c2::Int64)
