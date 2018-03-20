@@ -178,7 +178,7 @@ function equidist2(L1::HLine, L2::HLine, A::Vector{Float64}, B::Vector{Float64})
             println("l'intersection est le segment[A,B] de milieu le point:", [(xa+xb)/(2.0),(ya+yb)/(2.0), (za+zb)/(2.0)] )
             return Float64[(xa+xb)/(2.0),(ya+yb)/(2.0), (za+zb)/(2.0) ] 
         else println("---Erreur dans equidist ou voir 3ème partie")
-            return Float64[a0,b0,c0,delta] 
+            return Float64[] 
         end 
     else println("---La mediatrice de  H1 et  H2 ne coupe pas le segment [ A B ]")
         return Float64[]  
@@ -315,12 +315,12 @@ function equidist(L1::HLine, L2::HLine, A::Vector{Float64}, B::Vector{Float64})
                     println("etp27")
                     return equidist2(H1,H2, A,B) 
                 else 
-                    println("etp27")
+                    println("etp28")
                     return equidist3(H1,H2, A,B)
                 end      
                 
             elseif   min(za,zb)>=b
-                println("etp28")
+                println("etp29")
                 return equidist3(H1,H2, A,B)
             else 
                 println("---Erreur dans equidist4 ")
@@ -1145,29 +1145,35 @@ A3= -1.0
 B3= 2.0*z4
 C3 = -2.0 * a4 * x2 +2.0*a4*x4 - 2.0*b4 * y2 +2.0*b4*y4 + x2*x2 - x4*x4 + y2*y2 - y4*y4 - z4*z4
 D3= B3*B3-4.0*A3*C3
-t0= -(0.5)*((2.0* b1 * x2 - 2.0 * b1 * x4 +2.0 * d1 * y2 - 2.0 * d1 * y4 - x2 * x2 + x4 * x4 - y2 * y2 + y4 * y4 - z2 * z2 + z4 * z4) / (a1 * x2 - a1 * x4 + c1 * y2 - c1 * y4 + z2 - z4))
+  t0= -(0.5)*((2.0* b1 * x2 - 2.0 * b1 * x4 +2.0 * d1 * y2 - 2.0 * d1 * y4 - x2 * x2 + x4 * x4 - y2 * y2 + y4 * y4 - z2 * z2 + z4 * z4) / (a1 * x2 - a1 * x4 + c1 * y2 - c1 * y4 + z2 - z4))
 don0=a1 * x2 - a1 * x4 + c1 * y2 - c1 * y4 + z2 - z4
 
 if don0!=0 && don!=0 && t0<= z1 
+  
     q0=[a1*t0+b1, c1*t0+d1, t0]
+    println("etap1 ")
     return q0
-elseif don!=0 && D1>=0  && A1!=0 && d2!=0 && a2 
+elseif don!=0 && D1>=0  && A1!=0 && d2!=0 && a2!=0 
     t11=(0.5)*(-B1 - sqrt(D1))/A1
     t12= (0.5)*(-B1 + sqrt(D1))/A1
     q1=[a2*t11*t11+b2*t11+c2, d2*t11*t11+e2*t11+f2, t11]
     q2=[a2*t12*t12+b2*t12+c2, d2*t12*t12+e2*t12+f2, t12]
-    if   z1<=t11 && t11<=z2   
+    if   z1<=t11 && t11<=z2
+        println("etap2 ")   
         return q1
     elseif  z1<=t12 && t12<=z2
+        println("etap3 ")
         return q2
-    elseif D2>=0  && A2!=0 && a3 && d3 
+    elseif D2>=0  && A2!=0 && a3!=0 && d3!=0 
         t21=(0.5)*(-B2 - sqrt(D2))/A2
         t22=(0.5)*(-B2 + sqrt(D2))/A2
         q3=[a3*t21*t21+b3*t21+c3, d3*t21*t21+e3*t21+f3, t21]
         q4=[a3*t22*t22+b3*t22+c3, d3*t22*t22+e3*t22+f3, t22]
         if z2<=t21 && t21<=z3
+            println("etap4 ")
             return q3
         elseif  z2<=t22 && t22<=z3
+            println("etap5 ")
             return q4    
         elseif D3>=0  && A3!=0
             t31= (0.5)*(-B3 - sqrt(D3))/A3
@@ -1175,8 +1181,10 @@ elseif don!=0 && D1>=0  && A1!=0 && d2!=0 && a2
             q5=[a4, b4, t31]
             q6=[a4, b4, t32]
             if z3<=t31 && t31<=z4
+                println("etap6 ")
                 return q5
             elseif  z3<=t32 && t32<=z4
+                println("etap7 ")
                 return q6
             else    
                 println(" Il n' ya pas de point quadrisecteur pour H1 ,  H2  H3 et  H4")
@@ -1184,7 +1192,7 @@ elseif don!=0 && D1>=0  && A1!=0 && d2!=0 && a2
             end
             
         end
-
+        
     end
 end
 end
