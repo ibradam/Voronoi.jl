@@ -38,13 +38,16 @@ function equidist1(L1::HLine, L2::HLine, A::Vector{Float64}, B::Vector{Float64})
             t1 = (0.5)*((x1*x1-2*x1*xb - x2*x2 +2.0*x2*xb + y1*y1 - 2.0*y1*yb - y2*y2 +2.0*y2*yb + z1*z1 - 2.0*z1*zb - z2*z2 +2.0*z2*zb)/(x1*xa - x1*xb - x2*xa + x2*xb + y1*ya - y1*yb - y2*ya + y2*yb + z1*za - z1*zb - z2*za + z2*zb))       
             p1= t1*A+(1-t1)*B
             if   t1>=0 && t1 <= 1  #&& p1[3]<=a  && p1[1] >= min(xa,xb) && p1[1]<=max(xa,xb) && p1[2] >= min(ya,yb) && p1[2]<=max(ya,yb)
-            println(" p1")
+           
             return p1
-            else  println("---Erreur dans equidist ou voir 2ème partie")
+            else  println("---Erreur dans equidist1 ou voir 2ème partie")
             return Float64[]
             end     
-        else  println("l'intersection est le segment[A,B] de milieu le point:", [(xa+xb)/(2.0),(ya+yb)/(2.0), (za+zb)/(2.0)])
-            return Float64[(xa+xb)/(2.0),(ya+yb)/(2.0), (za+zb)/(2.0) ] 
+        else 
+            p15= [(xa+xb)/(2.0),(ya+yb)/(2.0), (za+zb)/(2.0)]
+             #println("l'intersection est le segment[A,B] de milieu le point:", [(xa+xb)/(2.0),(ya+yb)/(2.0), (za+zb)/(2.0)])
+            return p15            
+           # return Float64[(xa+xb)/(2.0),(ya+yb)/(2.0), (za+zb)/(2.0) ] 
         end  
     else println("---La mediatrice de  H1 et  H2 ne coupe pas le segment [ A B ]")
         return Float64[]    
@@ -163,21 +166,23 @@ function equidist2(L1::HLine, L2::HLine, A::Vector{Float64}, B::Vector{Float64})
             p2= t1*A+(1-t1)*B
             p3= t2*A+(1-t2)*B
             if  t1>=0 && t1 <= 1  
-                println(" p2")
+               
                 return p2
             else  
-                println(" p3")
+               
                 return p3
             end            
         elseif a0==0 && b0!=0
             t23=-c0/b0
             p23= t23*A+(1-t23)*B
-            println(" p23")
+            
             return p23
-        elseif a0==0 && b0==0  
-            println("l'intersection est le segment[A,B] de milieu le point:", [(xa+xb)/(2.0),(ya+yb)/(2.0), (za+zb)/(2.0)] )
-            return Float64[(xa+xb)/(2.0),(ya+yb)/(2.0), (za+zb)/(2.0) ] 
-        else println("---Erreur dans equidist ou voir 3ème partie")
+        elseif a0==0 && b0==0 
+            p235= [(xa+xb)/(2.0),(ya+yb)/(2.0), (za+zb)/(2.0)]
+             #println("l'intersection est le segment[A,B] de milieu le point:", [(xa+xb)/(2.0),(ya+yb)/(2.0), (za+zb)/(2.0)] )
+            return p235           
+           # return Float64[(xa+xb)/(2.0),(ya+yb)/(2.0), (za+zb)/(2.0) ] 
+        else println("---Erreur dans equidist2 ou voir 1ère ou 3ème partie")
             return Float64[] 
         end 
     else println("---La mediatrice de  H1 et  H2 ne coupe pas le segment [ A B ]")
@@ -227,18 +232,23 @@ function equidist3(L1::HLine, L2::HLine, A::Vector{Float64}, B::Vector{Float64})
     #t4=(norm(v1)^2-norm(v2)^2+(dot(v2,k))^2-(dot(v1,k))^2)/(2.0*(dot(-v,u12)-(dot(-v,k)*dot(u12,k))))
     dn=x1*xa - x1*xb - x2*xa + x2*xb + y1*ya - y1*yb - y2*ya + y2*yb
     if (distance2(H1,A)-distance2(H2,A))*(distance2(H1,B)-distance2(H2,B))<=0  
-  
-            t4 = (0.5)*((x1*x1-2*x1*xb - x2*x2 +2.0*x2*xb + y1*y1 - 2.0 *y1*yb - y2*y2 +2.0*y2*yb)/(x1*xa - x1*xb - x2*xa + x2*xb + y1*ya - y1*yb - y2*ya + y2*yb))
+        if   dn!=0
+            t4 = (x1^2- (2.0)*x1*xb - x2^2 +(2.0)*x2*xb + y1^2 - (2.0)*y1*yb - y2^2 +(2.0)*y2*yb)/((2.0)*(x1*xa - x1*xb - x2*xa + x2*xb + y1*ya - y1*yb - y2*ya + y2*yb))
             p4= t4*A+(1-t4)*B
-      if   dn!=0 && t4>=0 && t4 <= 1
-            # if   t4>=0 && t4 <= 1 # && p4[3]<=a  && p4[1] >= min(xa,xb) && p4[1]<=max(xa,xb) && p4[2] >= min(ya,yb) && p4[2]<=max(ya,yb)
-            println(" p4")
-            return p4
-        elseif dn==0
-            println("l'intersection est un segment d'extremité inférieure le point:",[xa,ya, (max(b,min(za,zb))+max(za,zb))/(2.0) ] )
-            return Float64[xa,ya, (max(b,min(za,zb))+max(za,zb))/(2.0) ] 
-        else  println("---Erreur dans equidist ou voir 2ème ou 1ème partie")
-            return Float64[]  
+            if t4>=0 && t4 <= 1
+                # if   t4>=0 && t4 <= 1 # && p4[3]<=a  && p4[1] >= min(xa,xb) && p4[1]<=max(xa,xb) && p4[2] >= min(ya,yb) && p4[2]<=max(ya,yb)
+               
+                return p4
+            else  println("---Erreur dans equidist3 ou voir 1ere ou 2ème partie" )
+                return Float64[]
+            end   
+        else
+            p5=[xa,ya, (max(b,min(za,zb))+max(za,zb))/(2.0) ] 
+             #println("l'intersection est un segment d'extremité inférieure le point:",[xa,ya, (max(b,min(za,zb))+max(za,zb))/(2.0) ] )
+            return p5            
+            #return Float64[xa,ya, (max(b,min(za,zb))+max(za,zb))/(2.0) ] 
+            #else  println("---Erreur dans equidist ou voir 2ème ou 1ème partie",[ t4, (distance2(H1,  A)-distance2(H2, A))*(distance2(H1,B)-distance2(H2,B)),dn][ t4, (distance2(H1,  A)-distance2(H2, A))*(distance2(H1,B)-distance2(H2,B)),dn] )
+            #  return Float64[]  
         end  
     else
         println("---La mediatrice de  H1 et  H2 ne coupe pas le segment [ A B ]")
@@ -275,52 +285,52 @@ function equidist(L1::HLine, L2::HLine, A::Vector{Float64}, B::Vector{Float64})
     if (distance2(H1,A)-distance2(H2,A))*(distance2(H1,B)-distance2(H2,B))<=0 
         if za==zb
             if za<=a
-                println("etp11")
+                
                 return equidist1(H1,H2, A,B)
             elseif za>=a && za<=b
-                println("etp12")
+               
                 return equidist2(H1,H2, A,B)
             else
-                println("etp13")
+               
                 return equidist3(H1,H2, A,B) 
             end
         else
             if max(za,zb)<=a
-                println("etp21")
+               
                 return equidist1(H1,H2, A,B)
             elseif min(za,zb)<=a && max(za,zb)>=a && max(za,zb)<=b 
                 if length(equidist1(H1,H2, A,B))>0
-                    println("etp22")
+                  
                     return equidist1(H1,H2, A,B) 
                 else 
-                    println("etp23")
+                   
                     return equidist2(H1,H2, A,B) 
                 end
             elseif min(za,zb)<=a && max(za,zb)>=b
                 if length(equidist1(H1,H2, A,B))>0
-                    println("etp23")
+                  
                     return equidist1(H1,H2, A,B) 
                 elseif  length(equidist2(H1,H2, A,B))>0
-                    println("etp24")
+                 
                     return equidist2(H1,H2, A,B) 
                 else 
-                    println("etp25")
+                   
                     return  equidist3(H1,H2, A,B)
                 end
             elseif min(za,zb)>=a && max(za,zb)<=b
-                println("etp26")
+               
                 return equidist2(H1,H2, A,B)
             elseif min(za,zb)>=a   &&  min(za,zb)<=b && max(za,zb)>=b
                 if length(equidist2(H1,H2, A,B))>0
-                    println("etp27")
+                   
                     return equidist2(H1,H2, A,B) 
                 else 
-                    println("etp28")
+                   
                     return equidist3(H1,H2, A,B)
                 end      
                 
             elseif   min(za,zb)>=b
-                println("etp29")
+               
                 return equidist3(H1,H2, A,B)
             else 
                 println("---Erreur dans equidist4 ")
@@ -443,7 +453,7 @@ function equidist1(H1::HLine, H2::HLine,  H3::HLine, A::Vector{Float64}, B::Vect
             println("qqq0")               
             return q0
         else                
-            println(" La trissectrice de  H1,  H2  et  H3 ne coupe pas la face [ A B]",[a1*z0+b1,c1*z0+d1,z0])
+            println(" La trissectrice de  H1,  H2  et  H3 ne coupe pas la face [ A B]")
             return Float64[]
         end
     else
@@ -967,7 +977,7 @@ end
 
 
 
-# The function equidist
+#= The function equidist
 # \param H1,H2, H3, H4
 # returns the  equidistant point to H1 and H2 on the segment [A,B]
 # info: output variable 
@@ -1195,4 +1205,234 @@ elseif don!=0 && D1>=0  && A1!=0 && d2!=0 && a2!=0
         
     end
 end
+end
+=#
+
+
+function equidist(H1::HLine, H2::HLine,  H3::HLine, H4::HLine)
+    if H1.m_pt[3]<H2.m_pt[3] && H2.m_pt[3]<H3.m_pt[3] && H3.m_pt[3]<H4.m_pt[3]
+        L1 = H1
+        L2 = H2
+        L3 = H3
+        L4=  H4
+    elseif H1.m_pt[3]< H2.m_pt[3] && H2.m_pt[3]<H4.m_pt[3] && H4.m_pt[3]<H3.m_pt[3]
+        L1 = H1
+        L2 = H2
+        L3 = H4
+        L4 = H3
+    elseif H1.m_pt[3]< H3.m_pt[3] && H3.m_pt[3]<H2.m_pt[3] && H2.m_pt[3]<H4.m_pt[3]
+        L1 = H1
+        L2 = H3
+        L3 = H2
+        L4= H4
+    elseif H1.m_pt[3]< H3.m_pt[3] && H3.m_pt[3]<H4.m_pt[3] && H4.m_pt[3]<H2.m_pt[3]
+        L1 = H1
+        L2 = H3
+        L3 = H4
+        L4= H2
+    elseif H1.m_pt[3]< H4.m_pt[3] && H4.m_pt[3]<H2.m_pt[3] && H2.m_pt[3]<H3.m_pt[3]
+        L1 = H1
+        L2 = H4
+        L3 = H2
+        L4 = H3
+    elseif H1.m_pt[3]< H4.m_pt[3] && H4.m_pt[3]<H3.m_pt[3] && H3.m_pt[3]<H2.m_pt[3]
+        L1 = H1
+        L2 = H4
+        L3 = H3
+        L4 = H2
+    elseif H2.m_pt[3]< H1.m_pt[3] && H1.m_pt[3]<H3.m_pt[3] && H3.m_pt[3]<H4.m_pt[3]
+        L1 = H2
+        L2 = H1
+        L3 = H3
+        L4 = H4
+    elseif H2.m_pt[3]< H1.m_pt[3] && H1.m_pt[3]<H4.m_pt[3] && H4.m_pt[3]<H3.m_pt[3]
+        L1 = H2
+        L2 = H1
+        L3 = H4
+        L4 = H3
+    elseif H2.m_pt[3]< H3.m_pt[3] && H3.m_pt[3]<H1.m_pt[3] && H1.m_pt[3]<H4.m_pt[3]
+        L1 = H2
+        L2 = H3
+        L3 = H1
+        L4 = H4
+    elseif H2.m_pt[3]< H3.m_pt[3] && H3.m_pt[3]<H4.m_pt[3] && H4.m_pt[3]<H1.m_pt[3]
+        L1 = H2
+        L2 = H3
+        L3 = H4
+        L4 = H1
+    elseif H2.m_pt[3]< H4.m_pt[3] && H4.m_pt[3]<H1.m_pt[3] && H1.m_pt[3]<H3.m_pt[3]
+        L1 = H2
+        L2 = H4
+        L3 = H1
+        L4 = H3    
+    elseif H2.m_pt[3]< H4.m_pt[3] && H4.m_pt[3]<H3.m_pt[3] && H3.m_pt[3]<H1.m_pt[3]
+        L1 = H2
+        L2 = H4
+        L3 = H3
+        L4 = H1
+    elseif H3.m_pt[3]< H1.m_pt[3] && H1.m_pt[3]<H2.m_pt[3] && H2.m_pt[3]<H4.m_pt[3]
+        L1 = H3
+        L2 = H1
+        L3 = H2
+        L4 = H4
+    elseif H3.m_pt[3]< H1.m_pt[3] && H1.m_pt[3]<H4.m_pt[3] && H4.m_pt[3]<H2.m_pt[3]
+        L1 = H3
+        L2 = H1
+        L3 = H4
+        L4 = H2
+    elseif H3.m_pt[3]< H2.m_pt[3] && H2.m_pt[3]<H1.m_pt[3] && H1.m_pt[3]<H4.m_pt[3]
+        L1 = H3
+        L2 = H2
+        L3 = H1
+        L4 = H4
+    elseif H3.m_pt[3]< H2.m_pt[3] && H2.m_pt[3]<H4.m_pt[3] && H4.m_pt[3]<H1.m_pt[3]
+        L1 = H3
+        L2 = H2
+        L3 = H4
+        L4 = H1
+    elseif H3.m_pt[3]< H4.m_pt[3] && H4.m_pt[3]<H2.m_pt[3] && H2.m_pt[3]<H1.m_pt[3]
+        L1 = H3
+        L2 = H4
+        L3 = H2
+        L4 = H1
+    elseif H3.m_pt[3]< H4.m_pt[3] && H4.m_pt[3]<H1.m_pt[3] && H1.m_pt[3]<H2.m_pt[3]
+        L1 = H3
+        L2 = H4
+        L3 = H1
+        L4 = H2
+    elseif H4.m_pt[3]< H1.m_pt[3] && H1.m_pt[3]<H2.m_pt[3] && H2.m_pt[3]<H3.m_pt[3]
+        L1 = H4
+        L2 = H1
+        L3 = H2
+        L4 = H3
+    elseif H4.m_pt[3]< H1.m_pt[3] && H1.m_pt[3]<H3.m_pt[3] && H3.m_pt[3]<H2.m_pt[3]
+        L1 = H4
+        L2 = H1
+        L3 = H3
+        L4 = H2
+    elseif H4.m_pt[3]< H2.m_pt[3] && H2.m_pt[3]<H1.m_pt[3] && H1.m_pt[3]<H3.m_pt[3]
+        L1 = H4
+        L2 = H2
+        L3 = H1
+        L4 = H3
+    elseif H4.m_pt[3]< H2.m_pt[3] && H2.m_pt[3]<H3.m_pt[3] && H3.m_pt[3]<H1.m_pt[3]
+        L1 = H4
+        L2 = H2
+        L3 = H3
+        L4 = H1
+    elseif H4.m_pt[3]< H3.m_pt[3] && H3.m_pt[3]<H1.m_pt[3] && H1.m_pt[3]<H2.m_pt[3]
+        L1 = H4
+        L2 = H3
+        L3 = H1
+        L4 = H2
+    else #if H4.m_pt[3]< H3.m_pt[3] && H3.m_pt[3]<H2.m_pt[3] && H2.m_pt[3]<H1.m_pt[3]
+        L1 = H4
+        L2 = H3
+        L3 = H2
+        L4 = H1
+    end 
+    x1=L1.m_pt[1]
+    y1=L1.m_pt[2]
+    z1=L1.m_pt[3]
+    x2=L2.m_pt[1]
+    y2=L2.m_pt[2] 
+    z2=L2.m_pt[3]
+    x3=L3.m_pt[1] 
+    y3=L3.m_pt[2]
+    z3=L3.m_pt[3]
+    x4=L4.m_pt[1]
+    y4=L4.m_pt[2]
+    z4=L4.m_pt[3]
+    c0 = 2 * x2 * y3 - 2 * x2 * y4 - 2 * x3 * y2 + 2 * x3 * y4 + 2 * x4 * y2 - 2 * x4 * y3
+    A0= x1 * x1 * x2 * y3 - x1 * x1 * x2 * y4 - x1 * x1 * x3 * y2 + x1 * x1 * x3 * y4 + x1 * x1 * x4 * y2 - x1 * x1 * x4 * y3 - x1 * x2 * x2 * y3 + x1 * x2 * x2 * y4 + x1 * x3 * x3 * y2 - x1 * x3 * x3 * y4 - x1 * x4 * x4 * y2 + x1 * x4 * x4 * y3 - x1 * y2 * y2 * y3 + x1 * y2 * y2 * y4 + x1 * y2 * y3 * y3 - x1 * y2 * y4 * y4 + x1 * y2 * z3 * z3 - x1 * y2 * z4 * z4 - x1 * y3 * y3 * y4 + x1 * y3 * y4 * y4 - x1 * y3 * z2 * z2 + x1 * y3 * z4 * z4 + x1 * y4 * z2 * z2 - x1 * y4 * z3 * z3 + x2 * x2 * x3 * y1 - x2 * x2 * x3 * y4 - x2 * x2 * x4 * y1 + x2 * x2 * x4 * y3 - x2 * x3 * x3 * y1 + x2 * x3 * x3 * y4 + x2 * x4 * x4 * y1 - x2 * x4 * x4 * y3 + x2 * y1 * y1 * y3 - x2 * y1 * y1 * y4 - x2 * y1 * y3 * y3 + x2 * y1 * y4 * y4 - x2 * y1 * z3 * z3 + x2 * y1 * z4 * z4 + x2 * y3 * y3 * y4 - x2 * y3 * y4 * y4 + x2 * y3 * z1 * z1 - x2 * y3 * z4 * z4 - x2 * y4 * z1 * z1 + x2 * y4 * z3 * z3 + x3 * x3 * x4 * y1 - x3 * x3 * x4 * y2 - x3 * x4 * x4 * y1 + x3 * x4 * x4 * y2 - x3 * y1 * y1 * y2 + x3 * y1 * y1 * y4 + x3 * y1 * y2 * y2 - x3 * y1 * y4 * y4 + x3 * y1 * z2 * z2 - x3 * y1 * z4 * z4 - x3 * y2 * y2 * y4 + x3 * y2 * y4 * y4 - x3 * y2 * z1 * z1 + x3 * y2 * z4 * z4 + x3 * y4 * z1 * z1 - x3 * y4 * z2 * z2 + x4 * y1 * y1 * y2 - x4 * y1 * y1 * y3 - x4 * y1 * y2 * y2 + x4 * y1 * y3 * y3 - x4 * y1 * z2 * z2 + x4 * y1 * z3 * z3 + x4 * y2 * y2 * y3 - x4 * y2 * y3 * y3 + x4 * y2 * z1 * z1 - x4 * y2 * z3 * z3 - x4 * y3 * z1 * z1 + x4 * y3 * z2 * z2
+   a3=y2 - y3
+   b3=-2 * y2 * z4 + 2 * y3 * z4
+   c3=2 * x2 * y3 - x2 * x2 * y4 - x3 * x3 * y2 + x3 * x3 * y4 + x4 * x4 * y2 - x4 * x4 * y3 + y2 * y2 * y3 - y2 * y2 * y4 - y2 * y3 * y3 + y2 * y4 * y4 + y2 * z4 * z4 + y3 * y3 * y4 - y3 * y4 * y4 - y3 * z4 * z4
+   d3=-x2 + x3
+   e3=2 * x2 * z4 - 2 * x3 * z4
+   f3=- x2 * x2 * x3 + x2 * x2 * x4 + x2 * x3 * x3 - x2 * x4 * x4 + x2 * y3 * y3 - x2 * y4 * y4 - x2 * z4 * z4 - x3 * x3 * x4 + x3 * x4 * x4 - x3 * y2 * y2 + x3 * y4 * y4 + x3 * z4 * z4 + x4 * y2 * y2 - x4 * y3 * y3
+   B0= 2 * x1 * y2 * z3 - 2 * x1 * y2 * z4 - 2 * x1 * y3 * z2 + 2 * x1 * y3 * z4 + 2 * x1 * y4 * z2 - 2 * x1 * y4 * z3 - 2 * x2 * y1 * z3 + 2 * x2 * y1 * z4 + 2 * x2 * y3 * z1 - 2 * x2 * y3 * z4 - 2 * x2 * y4 * z1 + 2 * x2 * y4 * z3 + 2 * x3 * y1 * z2 - 2 * x3 * y1 * z4 - 2 * x3 * y2 * z1 + 2 * x3 * y2 * z4 + 2 * x3 * y4 * z1 - 2 * x3 * y4 * z2 - 2 * x4 * y1 * z2 + 2 * x4 * y1 * z3 + 2 * x4 * y2 * z1 - 2 * x4 * y2 * z3 - 2 * x4 * y3 * z1 + 2 * x4 * y3 * z2
+   a1=2 * y2 * z3 - 2 * y2 * z4 - 2 * y3 * z2 + 2 * y3 * z4 + 2 * y4 * z2 - 2 * y4 * z3
+   b1=x2 * x2 * y3 - x2 * x2 * y4 - x3 * x3 * y2 + x3 * x3 * y4 + x4 * x4 * y2 - x4 * x4 * y3 + y2 * y2 * y3 - y2 * y2 * y4 - y2 * y3 * y3 + y2 * y4 * y4 - y2 * z3 * z3 + y2 * z4 * z4 + y3 * y3 * y4 - y3 * y4 * y4 + y3 * z2 * z2 - y3 * z4 * z4 - y4 * z2 * z2 + y4 * z3 * z3
+   c1=-2 * x2 * z3 + 2 * x2 * z4 + 2 * x3 * z2 - 2 * x3 * z4 - 2 * x4 * z2 + 2 * x4 * z3
+   d1=- x2 * x2 * x3 + x2 * x2 * x4 + x2 * x3 * x3 - x2 * x4 * x4 + x2 * y3 * y3 - x2 * y4 * y4 + x2 * z3 * z3 - x2 * z4 * z4 - x3 * x3 * x4 + x3 * x4 * x4 - x3 * y2 * y2 + x3 * y4 * y4 - x3 * z2 * z2 + x3 * z4 * z4 + x4 * y2 * y2 - x4 * y3 * y3 + x4 * z2 * z2 - x4 * z3 * z3
+   a2=(-y3 + y4)
+   b2=2 * y2 * z3 - 2 * y2 * z4 + 2 * y3 * z4 - 2 * y4 * z3
+   c2=x2 * x2 * y3 - x2 * x2 * y4 - x3 * x3 * y2 + x3 * x3 * y4 + x4 * x4 * y2 - x4 * x4 * y3 + y2 * y2 * y3 - y2 * y2 * y4 - y2 * y3 * y3 + y2 * y4 * y4 - y2 * z3 * z3 + y2 * z4 * z4 + y3 * y3 * y4 - y3 * y4 * y4 - y3 * z4 * z4 + y4 * z3*z3
+   d2=x3 - x4
+  e2=-2 * x2 * z3 + 2 * x2 * z4 - 2 * x3 * z4 + 2 * x4 * z3
+  f2=-2 * x2 * x3 + x2 * x2 * x4 + x2 * x3 * x3 - x2 * x4 * x4 + x2 * y3 * y3 - x2 * y4 * y4 + x2 * z3 * z3 - x2 * z4 * z4 - x3 * x3 * x4 + x3 * x4 * x4 - x3 * y2 * y2 + x3 * y4 * y4 + x3 * z4 * z4 + x4 * y2 * y2 - x4 * y3 * y3 - x4 * z3 * z3
+
+   A1=2 * y3 - x2 * y4 - x3 * y2 + x3 * y4 + x4 * y2 - x4 * y3
+   B1=2 * x1 * y2 * z3 - 2 * x1 * y2 * z4 - 2 * x1 * y3 * z2 + 2 * x1 * y3 * z4 + 2 * x1 * y4 * z2 - 2 * x1 * y4 * z3 - 2 * x2 * y1 * z3 + 2 * x2 * y1 * z4 - 2 * x2 * y3 * z4 + 2 * x2 * y4 * z3 + 2 * x3 * y1 * z2 - 2 * x3 * y1 * z4 + 2 * x3 * y2 * z4 - 2 * x3 * y4 * z2 - 2 * x4 * y1 * z2 + 2 * x4 * y1 * z3 - 2 * x4 * y2 * z3 + 2 * x4 * y3 * z2
+   C1=- x1 * x3 * x3 * y2 + x1 * x3 * x3 * y4 + x1 * x4 * x4 * y2 - x1 * x4 * x4 * y3 + x1 * y2 * y2 * y3 - x1 * y2 * y2 * y4 - x1 * y2 * y3 * y3 + x1 * y2 * y4 * y4 - x1 * y2 * z3 * z3 + x1 * y2 * z4 * z4 + x1 * y3 * y3 * y4 - x1 * y3 * y4 * y4 + x1 * y3 * z2 * z2 - x1 * y3 * z4 * z4 - x1 * y4 * z2 * z2 + x1 * y4 * z3 * z3 - x2 * x2 * x3 * y1 + x2 * x2 * x3 * y4 + x2 * x2 * x4 * y1 - x2 * x2 * x4 * y3 + x2 * x3 * x3 * y1 - x2 * x3 * x3 * y4 - x2 * x4 * x4 * y1 + x2 * x4 * x4 * y3 - x2 * y1 * y1 * y3 + x2 * y1 * y1 * y4 + x2 * y1 * y3 * y3 - x2 * y1 * y4 * y4 + x2 * y1 * z3 * z3 - x2 * y1 * z4 * z4 - x2 * y3 * y3 * y4 + x2 * y3 * y4 * y4 + x2 * y3 * z4 * z4 - x2 * y4 * z3 * z3 - x3 * x3 * x4 * y1 + x3 * x3 * x4 * y2 + x3 * x4 * x4 * y1 - x3 * x4 * x4 * y2 + x3 * y1 * y1 * y2 - x3 * y1 * y1 * y4 - x3 * y1 * y2 * y2 + x3 * y1 * y4 * y4 - x3 * y1 * z2 * z2 + x3 * y1 * z4 * z4 + x3 * y2 * y2 * y4 - x3 * y2 * y4 * y4 - x3 * y2 * z4 * z4 + x3 * y4 * z2 * z2 - x4 * y1 * y1 * y2 + x4 * y1 * y1 * y3 + x4 * y1 * y2 * y2 - x4 * y1 * y3 * y3 + x4 * y1 * z2 * z2 - x4 * y1 * z3 * z3 - x4 * y2 * y2 * y3 + x4 * y2 * y3 * y3 + x4 * y2 * z3 * z3 - x4 * y3 * z2 * z2 - x1 * x1 * x2 * y3 + x1 * x1 * x2 * y4 + x1 * x1 * x3 * y2 - x1 * x1 * x3 * y4 - x1 * x1 * x4 * y2 + x1 * x1 * x4 * y3 + x1 * x2 * x2 * y3 - x1 * x2 * x2 * y4
+   A2=-x1 * y3 + x1 * y4 + x2 * y3 - x2 * y4 + y1 * x3 - x3 * y2 - y1 * x4 + x4 * y2
+   B2=2 * x1 * y2 * z3 - 2 * x1 * y2 * z4 + 2 * x1 * y3 * z4 - 2 * x1 * y4 * z3 - 2 * x2 * y1 * z3 + 2 * x2 * y1 * z4 - 2 * x2 * y3 * z4 + 2 * x2 * y4 * z3 - 2 * x3 * y1 * z4 + 2 * x3 * y2 * z4 + 2 * x4 * y1 * z3 - 2 * x4 * y2 * z3
+   C2=- x1 * x3 * x3 * y2 + x1 * x3 * x3 * y4 + x1 * x4 * x4 * y2 - x1 * x4 * x4 * y3 + x1 * y2 * y2 * y3 - x1 * y2 * y2 * y4 - x1 * y2 * y3 * y3 + x1 * y2 * y4 * y4 - x1 * y2 * z3 * z3 + x1 * y2 * z4 * z4 + x1 * y3 * y3 * y4 - x1 * y3 * y4 * y4 - x1 * y3 * z4 * z4 + x1 * y4 * z3 * z3 - x2 * x2 * x3 * y1 + x2 * x2 * x3 * y4 + x2 * x2 * x4 * y1 - x2 * x2 * x4 * y3 + x2 * x3 * x3 * y1 - x2 * x3 * x3 * y4 - x2 * x4 * x4 * y1 + x2 * x4 * x4 * y3 - x2 * y1 * y1 * y3 + x2 * y1 * y1 * y4 + x2 * y1 * y3 * y3 - x2 * y1 * y4 * y4 + x2 * y1 * z3 * z3 - x2 * y1 * z4 * z4 - x2 * y3 * y3 * y4 + x2 * y3 * y4 * y4 + x2 * y3 * z4 * z4 - x2 * y4 * z3 * z3 - x3 * x3 * x4 * y1 + x3 * x3 * x4 * y2 + x3 * x4 * x4 * y1 - x3 * x4 * x4 * y2 + x3 * y1 * y1 * y2 - x3 * y1 * y1 * y4 - x3 * y1 * y2 * y2 + x3 * y1 * y4 * y4 + x3 * y1 * z4 * z4 + x3 * y2 * y2 * y4 - x3 * y2 * y4 * y4 - x3 * y2 * z4 * z4 - x4 * y1 * y1 * y2 + x4 * y1 * y1 * y3 + x4 * y1 * y2 * y2 - x4 * y1 * y3 * y3 - x4 * y1 * z3 * z3 - x4 * y2 * y2 * y3 + x4 * y2 * y3 * y3 + x4 * y2 * z3 * z3 - x1 * x1 * x2 * y3 + x1 * x1 * x2 * y4 + x1 * x1 * x3 * y2 - x1 * x1 * x3 * y4 - x1 * x1 * x4 * y2 + x1 * x1 * x4 * y3 + x1 * x2 * x2 * y3 - x1 * x2 * x2 * y4
+   A3=x1 * y2 - x1 * y3 - x2 * y1 + x2 * y3 + y1 * x3 - x3 * y2
+   B3=-2 * x1 * y2 * z4 + 2 * x1 * y3 * z4 + 2 * x2 * y1 * z4 - 2 * x2 * y3 * z4 - 2 * x3 * y1 * z4 + 2 * x3 * y2 * z4
+   C3= - x1 * x3 * x3 * y2 + x1 * x3 * x3 * y4 + x1 * x4 * x4 * y2 - x1 * x4 * x4 * y3 + x1 * y2 * y2 * y3 - x1 * y2 * y2 * y4 - x1 * y2 * y3 * y3 + x1 * y2 * y4 * y4 + x1 * y2 * z4 * z4 + x1 * y3 * y3 * y4 - x1 * y3 * y4 * y4 - x1 * y3 * z4 * z4 - x2 * x2 * x3 * y1 + x2 * x2 * x3 * y4 + x2 * x2 * x4 * y1 - x2 * x2 * x4 * y3 + x2 * x3 * x3 * y1 - x2 * x3 * x3 * y4 - x2 * x4 * x4 * y1 + x2 * x4 * x4 * y3 - x2 * y1 * y1 * y3 + x2 * y1 * y1 * y4 + x2 * y1 * y3 * y3 - x2 * y1 * y4 * y4 - x2 * y1 * z4 * z4 - x2 * y3 * y3 * y4 + x2 * y3 * y4 * y4 + x2 * y3 * z4 * z4 - x3 * x3 * x4 * y1 + x3 * x3 * x4 * y2 + x3 * x4 * x4 * y1 - x3 * x4 * x4 * y2 + x3 * y1 * y1 * y2 - x3 * y1 * y1 * y4 - x3 * y1 * y2 * y2 + x3 * y1 * y4 * y4 + x3 * y1 * z4 * z4 + x3 * y2 * y2 * y4 - x3 * y2 * y4 * y4 - x3 * y2 * z4 * z4 - x4 * y1 * y1 * y2 + x4 * y1 * y1 * y3 + x4 * y1 * y2 * y2 - x4 * y1 * y3 * y3 - x4 * y2 * y2 * y3 + x4 * y2 * y3 * y3 - x1 * x1 * x2 * y3 + x1 * x1 * x2 * y4 + x1 * x1 * x3 * y2 - x1 * x1 * x3 * y4 - x1 * x1 * x4 * y2 + x1 * x1 * x4 * y3 + x1 * x2 * x2 * y3 - x1 * x2 * x2 * y4
+
+
+if c0!=0 && A0!=0
+    t0=B0/A0 
+ # t0=A0/B0
+    q0=[(a1*t0+b1)/c0, (c1*t0+d1)/c0, t0]
+    if t0<=z1
+        return q0
+    else 
+        println(" erreur ou etape suivant ou bien Il n' ya pas de point quadrisecteur pour H1 ,  H2  H3 et  H4 et1", B0/A0)
+        q01=Float64[]
+        return q01
+    end
+elseif  length(q01)!=0 && c0!=0 && A1!=0 && D1>=0 
+    D1=B1^2-4.0*A1*C1
+    t11=(0.5)*(-B1 - sqrt(D1))/(2.0*A1)
+    t12= (0.5)*(-B1 + sqrt(D1))/(2.0*A1)
+    q1=[(a1*t11+b1)/c0, (c1*t11+d1)/c0, t11]
+    q2=[(a1*t12+b1)/c0, (c1*t12+d1)/c0, t12]
+    if   z1<=t11 && t11<=z2   
+        return q1
+    elseif  z1<=t12 && t12<=z2
+        return q2
+    else
+        println(" ---erreur ou etape suivant ou bien Il n' ya pas de point quadrisecteur pour H1 ,  H2  H3 et  H4 et2")
+        q12=Float64[]
+        return q12         
+    end
+elseif length(q12)!=0 D2>=0  && A2!=0 && c0!=0 
+    D2=B2^2-4.0*A2*C2
+    t21=(0.5)*(-B2 - sqrt(D2))/(2.0*A2)
+    t22=(0.5)*(-B2 + sqrt(D2))/(2.0*A2)
+    q3=[a2*t21*t21+b2*t21+c2, d2*t21*t21+e2*t21+f2, t21]
+    q4=[a2*t22*t22+b2*t22+c2, d2*t22*t22+e2*t22+f2, t22]
+    if z2<=t21 && t21<=z3
+        return q3
+    elseif  z2<=t22 && t22<=z3
+        return q4
+    else
+        println(" ---erreur ou etape suivant ou bien Il n' ya pas de point quadrisecteur pour H1 ,  H2  H3 et  H4 et3")
+        q34=Float64[]
+        return q34         
+    end  
+elseif length(q34)!=0 D3>=0  && A3!=0 && c0!=0
+    D3=B3^2-4.0*A3*C3
+    t31= (0.5)*(-B3 - sqrt(D3))/(2.0*A3)
+    t32= (0.5)*(- B3 + sqrt(D3))/(2.0*A3)
+    q5=[a3*t31*t31+b3*t31+c3, d3*t31*t31+e3*t31+f3, t31]
+    q6=[a3*t32*t32+b3*t32+c3, d3*t32*t32+e3*t32+f3, t32]
+    if z3<=t31 && t31<=z4
+        return q5
+    elseif  z3<=t32 && t32<=z4
+        return q6
+    else    
+        println(" ---erreur ou Il n' ya pas de point quadrisecteur pour H1 ,  H2  H3 et  H4 et4")
+        return Float64[] 
+    end
+
+else    
+    println(" Il n' ya pas de point quadrisecteur pour H1 ,  H2  H3 et  H4")
+    return Float64[] 
+end
+
 end
