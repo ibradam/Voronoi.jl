@@ -23,7 +23,7 @@ m = HLTMesh(L,tmesh(p1,p2))
 
 #m0 = voronoi(m,0.8,0.5,1.)
 #m0 = voronoi(m,0.7,0.25,0.5)
-m0 = voronoi(m, 0.01, 0.005)
+m0 = voronoi(m, 0.1, 0.05)
 #m0 = voronoi(m,0.25,0.15)
 #m0 = voronoi(m,0.15)
 
