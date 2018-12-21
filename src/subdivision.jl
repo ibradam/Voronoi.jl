@@ -48,6 +48,8 @@ function subdivision(m::HLTMesh, msf::Float64 = 0.2 , mcr::Float64 = msf/2, mpt 
 
         end
     end
+println("Number regular:",length(R))
+println("Number singular:",length(S))
 
     R, S
 end

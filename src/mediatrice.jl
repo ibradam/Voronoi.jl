@@ -280,15 +280,6 @@ function equidist4(L1::HLine, L2::HLine, A::Vector{Float64}, B::Vector{Float64})
     x2=H2.m_pt[1]
     y2=H2.m_pt[2]
     z2=H2.m_pt[3]
-    #u12=H2.m_pt-H1.m_pt
-   # v=A-B
-   # v1=H1.m_pt-B
-   # v2=H2.m_pt-B
-   # w2=H2.m_pt-A
-   # k=[0,0,1]
-  #  a0=(dot(v,k))^2
-   # b0=2*dot(v,u12)
-  #  c0=norm(v1)^2-norm(v2)^2+ (dot(v2,k))^2
     dn=x1*xa - x1*xb - x2*xa + x2*xb + y1*ya - y1*yb - y2*ya + y2*yb    
     if za!=zb
         
